@@ -1,0 +1,26 @@
+$background: #fffae8
+$palette-1: #04425d
+$palette-2: #34aa90
+$palette-3: #f9c74d
+$palette-4: #e24024
+
+$start-gap: 0px
+$stripe-width: 20px
+
+.title
+    font-size: 100px
+    color: rgb(85, 255, 150)
+
+body
+    background-image: linear-gradient(90deg, $background, $background $start-gap, $palette-1 $start-gap, $palette-1 $start-gap+$stripe-width, $palette-2 $start-gap+$stripe-width, $palette-2 $start-gap+2*$stripe-width, $palette-3 $start-gap+2*$stripe-width, $palette-3 $start-gap+3*$stripe-width, $palette-4 $start-gap+3*$stripe-width, $palette-4 $start-gap+4*$stripe-width, $background $start-gap+4*$stripe-width, $background $start-gap+5*$stripe-width)
+    background-size: 5000px 3000px
+    display: flex
+    justify-content: center
+    align-items: center
+
+.main-content
+    width: 1000px
+
+.codepen
+    width: 90%
+    margin: auto
