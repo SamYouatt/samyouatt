@@ -1,9 +1,6 @@
 +++
 title = "A Classy Refactoring"
 date = 2000-02-02
-
-[taxonomies]
-tags = ["some", "tag"]
 +++
 
 Picture the scene. An application that gathers demographic information from patients ready for use in medical diagnosis. The user will be asked a range of questions, and these are in various forms. Some are radio buttons, others are text fields. However, some are more complex. Radio buttons can be combined with a textbox if a certain radio button is clicked, checkbox fields can have multiple boxes checked but only one if it is the 'None of the above' option. So how to represent the responses of the patient in the code?
