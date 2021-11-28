@@ -1,5 +1,6 @@
 $background: #fffdf7
 $on-background: #222
+$on-background-dim: #444
 $palette-1: #04425d
 $palette-2: #34aa90
 $palette-3: #f9c74d
@@ -19,27 +20,46 @@ body
 
 p
     font-size: 16pt
+    margin: 0px
+
+h2
+    font-size: 40pt
+    margin: 50px 0px 15px 0px
+
+h3
+    font-size: 28pt
+    margin: 40px 0px 15px 0px
+
+a
+    color: $palette-1
 
 .main-content
     flex-basis: 1
     width: 1000px
     height: 100vh
-    margin-top: -50px
-    display: flex
-    flex-direction: column
+    // margin-top: -50px
+    // display: flex
+    // flex-direction: column
 
 .blog-body
     text-align: justify
     text-justify: auto
+    margin-top: 50px
 
 .logo
-    font-size: 25px
+    font-size: 28px
     color: $on-background
     flex-basis: 50px
 
-.title
+.blog-title
     font-size: 72pt
     color: $on-background
+    margin-top: 75px
+    margin-bottom: 0px
+
+.blog-date
+    font-size: 18pt
+    color: $on-background-dim
 
 .links
     height: 100%
@@ -82,8 +102,6 @@ p
         right: auto
         width: 100%
 
-.codepen
+.codepen-container
     width: 90%
-    margin: auto
-    margin-top: 25px
-    margin-bottom: 25px
+    margin: 25px auto

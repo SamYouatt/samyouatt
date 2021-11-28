@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
-<h1 class="title">{{ page.title }}</h1>
-<p class="subtitle"><strong>{{ page.date }}</strong></p>
+<h1 class="blog-title">{{ page.title }}</h1>
+<p class="blog-date"><strong>{{ page.date }}</strong></p>
 <section class="blog-body">
   {{ page.content | safe }} {% endblock content %}
 </section>
