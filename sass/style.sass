@@ -1,4 +1,5 @@
-$background: #fffae8
+$background: #fffdf7
+$on-background: #222
 $palette-1: #04425d
 $palette-2: #34aa90
 $palette-3: #f9c74d
@@ -7,20 +8,82 @@ $palette-4: #e24024
 $start-gap: 0px
 $stripe-width: 20px
 
-.title
-    font-size: 100px
-    color: rgb(85, 255, 150)
-
 body
     background-image: linear-gradient(90deg, $background, $background $start-gap, $palette-1 $start-gap, $palette-1 $start-gap+$stripe-width, $palette-2 $start-gap+$stripe-width, $palette-2 $start-gap+2*$stripe-width, $palette-3 $start-gap+2*$stripe-width, $palette-3 $start-gap+3*$stripe-width, $palette-4 $start-gap+3*$stripe-width, $palette-4 $start-gap+4*$stripe-width, $background $start-gap+4*$stripe-width, $background $start-gap+5*$stripe-width)
     background-size: 5000px 3000px
+    font-family: Helvetica, Arial, sans-serif
     display: flex
-    justify-content: center
+    flex-direction: column
     align-items: center
+    height: 100vh
+
+p
+    font-size: 16pt
 
 .main-content
+    flex-basis: 1
     width: 1000px
+    height: 100vh
+    margin-top: -50px
+    display: flex
+    flex-direction: column
+
+.blog-body
+    text-align: justify
+    text-justify: auto
+
+.logo
+    font-size: 25px
+    color: $on-background
+    flex-basis: 50px
+
+.title
+    font-size: 72pt
+    color: $on-background
+
+.links
+    height: 100%
+    width: 100%
+    display: inline
+    display: flex
+    flex-direction: column
+    align-items: start
+    justify-content: space-around
+    margin-top: -50px // account for height of top logo to center links
+
+.main-link
+    color: $on-background
+    font-size: 72pt
+    text-decoration: none
+
+.animate-underline
+    display: inline
+    position: relative
+    overflow: hidden
+    text-decoration: none
+    color: inherit
+
+    // creates an empty pseudo class which is what the underline looks like
+    &::after
+        content: ""
+        position: absolute
+        z-index: -1
+        right: 0
+        width: 0
+        bottom: -15%
+        background-image: linear-gradient(90deg, $palette-1 0%, $palette-1 25%, $palette-2 25%, $palette-2 50%, $palette-3 50%, $palette-3 75%, $palette-4 75%, $palette-4)
+        height: 10%
+        transition-property: width
+        transition-duration: 0.2s
+        transition-timing-function: ease-out
+
+    &:hover::after, &:focus::after, &:active::after
+        left: 0
+        right: auto
+        width: 100%
 
 .codepen
     width: 90%
     margin: auto
+    margin-top: 25px
+    margin-bottom: 25px
