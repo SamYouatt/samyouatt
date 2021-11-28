@@ -5,7 +5,11 @@ date = 2000-02-02
 
 ## Zola
 
+I wanted something simple so I chose zola.
+
 ## Design
+
+I want it to look really nice.
 
 ## Colours and Fonts
 
