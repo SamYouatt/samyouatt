@@ -21,13 +21,7 @@ The main visual styling will be a striped motif using the colours from the palet
 
 By adding in variables for the start gap and the width of the line, and doing some simple maths to define where colours should start and end, I can now easily control where I want the lines and how they should look. The embed below can be edited to see the effect changing these values has.
 
-<div class="codepen-container"><p class="codepen" data-height="300" data-theme-id="dark" data-default-tab="css,result" data-slug-hash="OJjKEGa" data-editable="true" data-user="sam-youatt" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/sam-youatt/pen/OJjKEGa">
-  Untitled</a> by Sam Youatt (<a href="https://codepen.io/sam-youatt">@sam-youatt</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
-</div>
+{{ codepen(slug="OJjKEGa")}}
 
 ### Animating Underlines
 
@@ -39,17 +33,51 @@ This effect can be achieved in pure CSS, by taking advantage of the `after` pseu
 
 `after` creates an extra element immediately after the specified class, which can then have all the normal CSS styling applied. To achieve the stripey underline this pseudoclass will have its background set to stripes. By controlling the height of this class we can control how thick the underline is, and by animating its width we can achieve the effect of the underline sliding in and out. Let's have a look.
 
-<div class="codepen-container">
-<p class="codepen" data-height="300" data-theme-id="dark" data-default-tab="css,result" data-slug-hash="XWerqxx" data-editable="true" data-user="sam-youatt" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/sam-youatt/pen/XWerqxx">
-  Untitled</a> by Sam Youatt (<a href="https://codepen.io/sam-youatt">@sam-youatt</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
-</div>
+{{ codepen(slug="XWerqxx") }}
 
 ---
 
 Looking at the finished product is has become apparent that, without any ill will or intent on my part, I have essentially created [Polaroid](https://uk.polaroid.com/).
 
 Imitation is the best form of flattery and so forth I suppose.
+
+## Features
+
+### Codepen
+
+Those fancy codepen embeds you saw are provided by Codepen, they let you embed them through either an i-frame or raw HTML. I chose HTML because it gives me a little more control but copying and pasting the whole embed every time leaves the markdown looking a little messy. And remember, if you find yourself writing the same thing over and over again, don't. You've done it once already just use that.
+
+Zola provides functionality to create custom shortcodes. These are commands that you call in the markdown that will summon the specified HTML spirit into the compiled HTML with whatever instructions you tell them. For the codepen the shortcode template is as follows:
+
+```HTML
+<div class="codepen-container">
+  <p
+    data-slug-hash="{{slug}}"
+    data-editable="true"
+    class="codepen" data-height="300" data-theme-id="dark" data-default-tab="css,result" data-user="sam-youatt" 
+    style="
+      height: 300px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      margin: 1em 0;
+      padding: 1em;
+    "
+  >
+    <span
+      >See the Pen
+      <a href="https://codepen.io/sam-youatt/pen/{{slug}}"> Untitled</a>
+      by Sam Youatt (<a href="https://codepen.io/sam-youatt">@sam-youatt</a>) on
+      <a href="https://codepen.io">CodePen</a>.</span
+    >
+  </p>
+  <script
+    async
+    src="https://cpwebassets.codepen.io/assets/embed/ei.js"
+  ></script>
+</div>
+```
+
+The important part is imprisoned by the double braces: `slug`. Everything else is repeated across all the pens but Codepen need some way to know which file to display, by being passed a slug like some sort of trade deal performed by children in a freshly raining garden. The double braces let Zola know that these are one of those instructions you're going to give it. Calling is then the much shorter summoning ritual: `{{*codepen(slug="XxXCornDog")*}}`.
