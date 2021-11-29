@@ -1,18 +1,27 @@
 $background: #fffdf7
 $on-background: #222
-$on-background-dim: #444
+
 $palette-1: #04425d
 $palette-2: #34aa90
 $palette-3: #f9c74d
 $palette-4: #e24024
 
+$on-background-dim: $palette-4
+
 $start-gap: 0px
 $stripe-width: 20px
+
+@font-face
+    font-family: 'Futura Now Headline'
+    src: url('fonts/FuturaNowHeadline-Bd.woff2') format('woff2'), url('fonts/FuturaNowHeadline-Bd.woff') format('woff')
+    font-weight: bold
+    font-style: normal
+    font-display: swap
 
 body
     background-image: linear-gradient(90deg, $background, $background $start-gap, $palette-1 $start-gap, $palette-1 $start-gap+$stripe-width, $palette-2 $start-gap+$stripe-width, $palette-2 $start-gap+2*$stripe-width, $palette-3 $start-gap+2*$stripe-width, $palette-3 $start-gap+3*$stripe-width, $palette-4 $start-gap+3*$stripe-width, $palette-4 $start-gap+4*$stripe-width, $background $start-gap+4*$stripe-width, $background $start-gap+5*$stripe-width)
     background-size: 5000px 3000px
-    font-family: Helvetica, Arial, sans-serif
+    font-family: Poppins, Helvetica, Arial, sans-serif
     display: flex
     flex-direction: column
     align-items: center
@@ -20,13 +29,18 @@ body
 
 p
     font-size: 16pt
-    margin: 0px
+    margin: 20px 0px 20px 0px
+
+h1
+    font-weight: 700
 
 h2
+    font-weight: 700
     font-size: 40pt
     margin: 50px 0px 15px 0px
 
 h3
+
     font-size: 28pt
     margin: 40px 0px 15px 0px
 
@@ -48,6 +62,8 @@ a
 
 .logo
     font-size: 28px
+    font-family: Futura Now Headline
+    font-weight: 500
     color: $on-background
     flex-basis: 50px
 
@@ -59,6 +75,7 @@ a
 
 .blog-date
     font-size: 18pt
+    font-style: italic
     color: $on-background-dim
 
 .links
