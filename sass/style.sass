@@ -26,6 +26,7 @@ body
     flex-direction: column
     align-items: center
     height: 100vh
+    padding: 0px 0px 50px 0px
 
 p
     font-size: 16pt
@@ -33,6 +34,8 @@ p
 
 h1
     font-weight: 700
+    font-size: 48pt
+    margin: 50px 0px 15px 0px
 
 h2
     font-weight: 700
@@ -50,7 +53,7 @@ a
 .main-content
     flex-basis: 1
     width: 1000px
-    height: 100vh
+    margin: 25px 0px 100px 0px
     // margin-top: -50px
     // display: flex
     // flex-direction: column
@@ -62,16 +65,16 @@ a
 
 .logo
     font-size: 28px
-    font-family: Futura Now Headline
-    font-weight: 500
+    font-family: Futura Now Headline, Helvetica
+    font-weight: 700
+    margin: 50px 0px 50px 0px
     color: $on-background
     flex-basis: 50px
 
 .blog-title
     font-size: 72pt
     color: $on-background
-    margin-top: 75px
-    margin-bottom: 0px
+    margin: 50px 0px 0px 0px
 
 .blog-date
     font-size: 18pt
@@ -122,3 +125,46 @@ a
 .codepen-container
     width: 90%
     margin: 25px auto
+
+.arrow
+    border: solid black
+    border-width: 0 3px 3px 0
+    display: inline-block
+    padding: 7px
+    margin: 0px 5px 0px 5px
+
+.left
+    transform: rotate(135deg)
+    -webkit-transform: rotate(135deg)
+
+.back-link
+    font-weight: 400
+    font-size: 18pt
+    margin: 0px 0px 0px 0px
+
+.blogs-ul
+    margin: 50px 0px 0px 0px
+    list-style: none
+    padding-left: 0px
+
+.blogs-li
+    margin: 35px 0px 15px 0px
+    background-color: #fff8e8
+    font-size: 20pt
+    padding: 15px
+    border-radius: 15px
+    border: rgba(0, 0, 0, 0) 3px solid
+    transition-property: border
+    transition-duration: 0.2s
+
+    &:hover, &:focus, &:active
+        cursor: pointer
+        border: $palette-1 3px solid
+        transition-duration: 0.2s
+
+.blogs-title
+    font-size: 20pt
+    font-weight: 500
+
+.blogs-description
+    font-size: 14pt

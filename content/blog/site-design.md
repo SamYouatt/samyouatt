@@ -1,6 +1,7 @@
 +++
 title = "Site Design"
 date = 2000-02-02
+description = "Where am I going to put all these if I don't have a website? Best fix that..."
 +++
 
 ## Zola

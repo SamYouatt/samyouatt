@@ -1,8 +1,13 @@
 {% extends "base.html" %} {% block content %}
 <h1 class="title">{{ section.title }}</h1>
-<ul>
+<ul class="blogs-ul">
   {% for page in section.pages %}
-  <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+  <li class="blogs-li" onclick="location.href = '{{ page.permalink | safe }}'">
+    <a href="{{ page.permalink | safe }}" class="animate-underline blogs-title"
+      >{{ page.title }}</a
+    >
+    <p class="blogs-description">{{ page.description }}</p>
+  </li>
   {% endfor %}
 </ul>
 {% endblock content %}

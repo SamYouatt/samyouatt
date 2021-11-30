@@ -1,6 +1,7 @@
 +++
 title = "Raspberry Pi"
 date = 2021-11-15
+description = "Making..."
 +++
 
 ## Buying Hardware
