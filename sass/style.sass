@@ -1,4 +1,4 @@
-$background: #fffdf7
+$background: #fafafa
 $on-background: #222
 
 $palette-1: #04425d
@@ -35,7 +35,7 @@ p
 h1
     font-weight: 700
     font-size: 48pt
-    margin: 50px 0px 15px 0px
+    margin: 50px 0px 25px 0px
 
 h2
     font-weight: 700
@@ -51,7 +51,7 @@ a
     color: $palette-1
 
 .main-content
-    flex-basis: 1
+    height: 100%
     width: 1000px
     margin: 25px 0px 100px 0px
     // margin-top: -50px
@@ -149,7 +149,7 @@ a
 
 .blogs-li
     margin: 35px 0px 15px 0px
-    background-color: #fff8e8
+    background-color: #d1e8fa
     font-size: 20pt
     padding: 15px
     border-radius: 15px
@@ -162,9 +162,38 @@ a
         border: $palette-1 3px solid
         transition-duration: 0.2s
 
-.blogs-title
-    font-size: 20pt
-    font-weight: 500
+.blog-list-container
+    margin: 75px 0px 0px 0px
 
-.blogs-description
+.blog-list-title
+    font-size: 48pt
+    font-weight: 700
+    margin: 0px 0px 50px 0px
+
+.blog-list-card
+    display: grid
+    grid-template-rows: auto
+    grid-template-columns: auto auto 75px
+    grid-template-areas: "header header header" "description description description" "start .button"
+    background: #fdfdfd
+    padding: 15px
+    margin: 30px 0px 30px 0px
+    border-radius: 10px
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 30px
+
+.blog-list-title
+    margin: 0px 0px 10px 0px
+    grid-area: header
+    font-size: 18pt
+    font-weight: 600
+
+.blog-list-description
     font-size: 14pt
+    grid-area: description
+    margin: 0px 0px 10px 0px
+
+.blog-list-read
+    background: #d1e8fa
+    grid-area: button
+    border-radius: 5px
+    grid-column-end: 12
