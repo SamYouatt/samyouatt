@@ -8,7 +8,21 @@ $palette-4: #e24024
 
 $on-background-dim: $palette-4
 
+$element-background: #d1e8fa
+$element-foreground: #1a8de6
+
+$xx-large: 10%
+$x-large: 7.5%
+$large: 5%
+$medium: 2.5%
+$small: 1%
+$x-small: 0.5%
+
 $stripe-width: 1%
+
+$border-radius: 0.5vh
+
+$large-breakout: 1025px
 
 @font-face
     font-family: 'Futura Now Headline'
@@ -29,12 +43,13 @@ body
     flex-direction: column
     align-items: center
     height: 100vh
+    color: $on-background
     width: 100vw
     background-color: $background
     background-repeat: repeat-x
     background-image: linear-gradient($palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
 
-    @media only screen and (min-width: 1025px)
+    @media only screen and (min-width: $large-breakout)
         background-image: linear-gradient(90deg, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
         background-repeat: repeat-y
 
@@ -53,22 +68,24 @@ h2
     margin: 50px 0px 15px 0px
 
 h3
-
     font-size: 2rem
     margin: 40px 0px 15px 0px
 
 a
-    color: $palette-1
+    color: $element-foreground
+    text-decoration-color: $element-background
+    font-weight: 500
+
+    &:hover
+        text-decoration-color: $element-foreground
 
 .main-content
-    //height: 100%
     flex-grow: 1
     width: calc(min(90vw, 1000px))
     margin: 25px 0px 100px 0px
 
 .blog-body
-    text-align: justify
-    text-justify: auto
+    font-family: 'Rubik'
     margin-top: 50px
 
 .logo
@@ -78,7 +95,7 @@ a
     margin: 50px 0px 50px 0px
     color: $on-background
 
-    @media only screen and (max-width: 1025px)
+    @media only screen and (max-width: $large-breakout)
         padding-top: 5vh
 
 .blog-title
@@ -100,13 +117,11 @@ a
     justify-content: space-around
     margin-top: -50px // account for height of top logo to center links
 
-    @media only screen and (max-width: 1025px)
+    @media only screen and (max-width: $large-breakout)
         align-items: center
         text-align: center
 
 .main-link
-    color: $on-background
-    font-size: 72pt
     text-decoration: none
 
 .animate-underline
@@ -139,64 +154,34 @@ a
     width: 90%
     margin: 25px auto
 
-.arrow
-    border: solid black
-    border-width: 0 3px 3px 0
-    display: inline-block
-    padding: 7px
-    margin: 0px 5px 0px 5px
-
-.left
-    transform: rotate(135deg)
-    -webkit-transform: rotate(135deg)
-
 .back-link
-    font-weight: 400
-    font-size: 18pt
-    margin: 0px 0px 0px 0px
-
-.blogs-ul
-    margin: 50px 0px 0px 0px
-    list-style: none
-    padding-left: 0px
-
-.blogs-li
-    margin: 35px 0px 15px 0px
-    background-color: #d1e8fa
-    font-size: 20pt
-    padding: 15px
-    border-radius: 15px
-    border: rgba(0, 0, 0, 0) 3px solid
-    transition-property: border
-    transition-duration: 0.2s
-
-    &:hover, &:focus, &:active
-        cursor: pointer
-        border: $palette-1 3px solid
-        transition-duration: 0.2s
+    font-weight: 600
+    font-size: 1.5rem
+    margin: 0
 
 .blog-list-container
-    margin: 75px 0px 0px 0px
+    margin: $large 0px 0px 0px
 
 .blog-list-card
     $stripe-width: 5px
     display: flex
     flex-direction: column
-    background-image: linear-gradient(90deg, $palette-1 0%, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width, $background 5*$stripe-width)
-    padding: 25px 25px 25px 50px
-    margin: 30px 0px 30px 0px
-    border-radius: 10px
+    padding: $medium $medium $medium $large
+    margin: $medium 0 $medium 0
+    border-radius: 2*$border-radius
     box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 30px
 
+    @media only screen and (min-width: $large-breakout)
+        background-image: linear-gradient(90deg, $palette-1 0%, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width, $background 5*$stripe-width)
+
 .blog-list-title
-    margin: 0px 0px 0px 0px
+    margin: 0
     font-weight: 600
 
 .blog-list-date
-    margin: 5px 0px 0px 0px
-    font-size: 1.25rem
+    margin: $x-small 0 0 0
+    font-size: 1rem
     color: #5c5c5c
-    //color: $palette-2
     font-style: italic
     font-weight: 500
 
@@ -204,25 +189,25 @@ a
     font-size: 1.5rem
     font-family: 'Rubik'
     color: #383838
-    grid-area: description
-    margin: 20px 0px 10px 0px
+    margin: $medium 0 $large 0
+
+    @media only screen and (min-width: $large-breakout)
+        margin: $medium 0 $medium 0
 
 .blog-list-read
-    background: #d1e8fa
-    color: #354b59
-    padding: 10px 20px 10px 20px
+    background: $element-background
+    color: $element-foreground
+    padding: $small $medium $small $medium
     text-decoration: none
     font-size: 1.5rem
     font-weight: 600
     align-self: flex-end
-    border-radius: 5px
+    border-radius: $border-radius
     grid-column-end: 12
     text-align: center
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px
-    //transition-property: box-shadow
     transition-duration: 0.4s
 
     &:hover, &:focus, &:active
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px -1px, rgba(0, 0, 0, 0.06) 0px 2px 8px -1px
-        scale: 1.2
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 15px -1px, rgba(0, 0, 0, 0.12) 0px 2px 12px -1px
         transition-duration: 0.4s

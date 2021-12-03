@@ -1,6 +1,6 @@
 +++
 title = "A Classy Refactoring"
-date = 2000-02-02
+date = 2021-11-29
 description = "Kotlin has a lot of nice extensions to Java classes to help with abstracting complex data representations and its about time they get released into my project..."
 +++
 
