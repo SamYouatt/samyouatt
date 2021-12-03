@@ -21,16 +21,22 @@ html
     font-size: 1.25vh
 
 body
+    margin: 0
+    padding: 0
+    box-sizing: border-box
     font-family: Poppins, Helvetica, Arial, sans-serif
     display: flex
     flex-direction: column
     align-items: center
     height: 100vh
     width: 100vw
+    background-color: $background
+    background-repeat: repeat-x
     background-image: linear-gradient($palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
 
-    @media (min-width: 480px)
+    @media only screen and (min-width: 1025px)
         background-image: linear-gradient(90deg, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
+        background-repeat: repeat-y
 
 p
     font-size: 16pt
@@ -55,8 +61,9 @@ a
     color: $palette-1
 
 .main-content
-    height: 100%
-    width: calc(min(85vw, 1000px))
+    //height: 100%
+    flex-grow: 1
+    width: calc(min(90vw, 1000px))
     margin: 25px 0px 100px 0px
 
 .blog-body
@@ -65,12 +72,14 @@ a
     margin-top: 50px
 
 .logo
-    font-size: calc(max(2rem, 50px))
+    font-size: calc(min(2rem, 50px))
     font-family: Futura Now Headline, Helvetica
     font-weight: 700
     margin: 50px 0px 50px 0px
     color: $on-background
-    flex-basis: 50px
+
+    @media only screen and (max-width: 1025px)
+        padding-top: 5vh
 
 .blog-title
     font-size: 72pt
@@ -85,12 +94,15 @@ a
 .links
     height: 100%
     width: 100%
-    display: inline
     display: flex
     flex-direction: column
     align-items: start
     justify-content: space-around
     margin-top: -50px // account for height of top logo to center links
+
+    @media only screen and (max-width: 1025px)
+        align-items: center
+        text-align: center
 
 .main-link
     color: $on-background
