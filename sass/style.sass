@@ -8,8 +8,7 @@ $palette-4: #e24024
 
 $on-background-dim: $palette-4
 
-$start-gap: 0px
-$stripe-width: 20px
+$stripe-width: 1%
 
 @font-face
     font-family: 'Futura Now Headline'
@@ -18,15 +17,20 @@ $stripe-width: 20px
     font-style: normal
     font-display: swap
 
+html
+    font-size: 1.25vh
+
 body
-    background-image: linear-gradient(90deg, $background, $background $start-gap, $palette-1 $start-gap, $palette-1 $start-gap+$stripe-width, $palette-2 $start-gap+$stripe-width, $palette-2 $start-gap+2*$stripe-width, $palette-3 $start-gap+2*$stripe-width, $palette-3 $start-gap+3*$stripe-width, $palette-4 $start-gap+3*$stripe-width, $palette-4 $start-gap+4*$stripe-width, $background $start-gap+4*$stripe-width, $background $start-gap+5*$stripe-width)
-    background-size: 5000px 3000px
     font-family: Poppins, Helvetica, Arial, sans-serif
     display: flex
     flex-direction: column
     align-items: center
     height: 100vh
-    padding: 0px 0px 50px 0px
+    width: 100vw
+    background-image: linear-gradient($palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
+
+    @media (min-width: 480px)
+        background-image: linear-gradient(90deg, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width)
 
 p
     font-size: 16pt
@@ -34,17 +38,17 @@ p
 
 h1
     font-weight: 700
-    font-size: 48pt
+    font-size: 5rem
     margin: 50px 0px 25px 0px
 
 h2
     font-weight: 700
-    font-size: 40pt
+    font-size: 3rem
     margin: 50px 0px 15px 0px
 
 h3
 
-    font-size: 28pt
+    font-size: 2rem
     margin: 40px 0px 15px 0px
 
 a
@@ -52,11 +56,8 @@ a
 
 .main-content
     height: 100%
-    width: 1000px
+    width: calc(min(85vw, 1000px))
     margin: 25px 0px 100px 0px
-    // margin-top: -50px
-    // display: flex
-    // flex-direction: column
 
 .blog-body
     text-align: justify
@@ -64,7 +65,7 @@ a
     margin-top: 50px
 
 .logo
-    font-size: 28px
+    font-size: calc(max(2rem, 50px))
     font-family: Futura Now Headline, Helvetica
     font-weight: 700
     margin: 50px 0px 50px 0px
@@ -165,35 +166,51 @@ a
 .blog-list-container
     margin: 75px 0px 0px 0px
 
-.blog-list-title
-    font-size: 48pt
-    font-weight: 700
-    margin: 0px 0px 50px 0px
-
 .blog-list-card
-    display: grid
-    grid-template-rows: auto
-    grid-template-columns: auto auto 75px
-    grid-template-areas: "header header header" "description description description" "start .button"
-    background: #fdfdfd
-    padding: 15px
+    $stripe-width: 5px
+    display: flex
+    flex-direction: column
+    background-image: linear-gradient(90deg, $palette-1 0%, $palette-1 $stripe-width, $palette-2 $stripe-width, $palette-2 2*$stripe-width, $palette-3 2*$stripe-width, $palette-3 3*$stripe-width, $palette-4 3*$stripe-width, $palette-4 4*$stripe-width, $background 4*$stripe-width, $background 5*$stripe-width)
+    padding: 25px 25px 25px 50px
     margin: 30px 0px 30px 0px
     border-radius: 10px
     box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 30px
 
 .blog-list-title
-    margin: 0px 0px 10px 0px
-    grid-area: header
-    font-size: 18pt
+    margin: 0px 0px 0px 0px
     font-weight: 600
 
+.blog-list-date
+    margin: 5px 0px 0px 0px
+    font-size: 1.25rem
+    color: #5c5c5c
+    //color: $palette-2
+    font-style: italic
+    font-weight: 500
+
 .blog-list-description
-    font-size: 14pt
+    font-size: 1.5rem
+    font-family: 'Rubik'
+    color: #383838
     grid-area: description
-    margin: 0px 0px 10px 0px
+    margin: 20px 0px 10px 0px
 
 .blog-list-read
     background: #d1e8fa
-    grid-area: button
+    color: #354b59
+    padding: 10px 20px 10px 20px
+    text-decoration: none
+    font-size: 1.5rem
+    font-weight: 600
+    align-self: flex-end
     border-radius: 5px
     grid-column-end: 12
+    text-align: center
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px
+    //transition-property: box-shadow
+    transition-duration: 0.4s
+
+    &:hover, &:focus, &:active
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px -1px, rgba(0, 0, 0, 0.06) 0px 2px 8px -1px
+        scale: 1.2
+        transition-duration: 0.4s
