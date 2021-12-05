@@ -1,5 +1,5 @@
 +++
-title = Learning DNS
+title = "Learning DNS"
 draft = true
 description = "In the labyrinth of connections and handshakes that is the internet you're going to need to give people directions to your home. DNS is the signpost of the internet, but not quite as simple as a pole with some text on..."
 +++
