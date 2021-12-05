@@ -17,6 +17,7 @@ $large: 5%
 $medium: 2.5%
 $small: 1%
 $x-small: 0.5%
+$xx-small: 0.25%
 
 $stripe-width: 1%
 
@@ -56,6 +57,7 @@ body
 p
     font-size: 16pt
     margin: 20px 0px 20px 0px
+    line-height: 1.6
 
 h1
     font-weight: 700
@@ -99,9 +101,7 @@ a
         padding-top: 5vh
 
 .blog-title
-    font-size: 72pt
-    color: $on-background
-    margin: 50px 0px 0px 0px
+    margin: $large 0px 0px 0px
 
 .blog-date
     font-size: 18pt
@@ -212,3 +212,71 @@ a
     &:hover, &:focus, &:active
         box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 15px -1px, rgba(0, 0, 0, 0.12) 0px 2px 12px -1px
         transition-duration: 0.4s
+
+// inline code
+p code
+    background: $element-background
+    font-family: 'Source Code Pro', monospace
+    color: $element-foreground
+    padding: $xx-small $x-small $xx-small $x-small
+    border-radius: $border-radius
+
+// code blocks
+pre
+    padding: 1rem
+    font-size: 1.25vh
+    overflow: auto
+    border-radius: $border-radius
+    font-family: 'Source Code Pro', monospace
+    background-color: #fff
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 30px
+
+// The line numbers already provide some kind of left/right padding
+pre[data-linenos]
+    padding: 1rem 0
+
+pre table td
+    padding: 0
+
+// The line number cells
+pre table td:nth-of-type(1)
+    text-align: center
+    user-select: none
+
+pre mark
+  // If you want your highlights to take the full width.
+    display: block
+  // The default background colour of a mark is bright yellow
+    background-color: rgba(254, 252, 232, 0.9)
+
+pre table
+    width: 100%
+    border-collapse: collapse
+
+pre #text
+    color: #e06c75
+
+.z-keyword
+    color: #9f35a2
+
+.z-comment
+    color: #a0a1a7
+    font-style: italic
+
+.z-assignment
+    color: #9f35a2
+
+.z-type
+    color: #e06c75
+
+.z-modifier
+    color: #9f35a2
+
+.z-name
+    color: #5184f3
+
+.z-inherited-class
+    color: #e06c75
+
+.z-declaration
+    color: #e06c75
