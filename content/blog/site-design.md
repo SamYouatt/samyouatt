@@ -83,6 +83,57 @@ The fonts I ended up using and their uses are as follows:
 
 Again these may have changed by the time this is read. I can only hope that my elite team has not crumbled though and you're trying to translate this from Wingdings.
 
+One of the main challenges of modern web development is responsive design. Not everyone is reading these posts on my monitor; with my staggering reach it would be infeasible to fit that many people in my flat. People will be using monitors of all shapes and resolutions, tablets, phones, maybe even TVs.
+
+The general trend has been from using fixed units like `px` to responsive units like `vh`, `rem`, etc. Font scaling is also very important. There are a lot of methods for defining font sizes, you could specify font sizes for each class to get a lot of control, or what I have done, define a font size hierarchy initially which will scale well and be used generically across all content.
+
+This hierarchy will make use of the `rem` unit, the root element unit, which looks at the `html` element for the basis font size and then multiplies the value. So for my `html` root size I chose `1.25vh`. This means the root font size will scale as the screen size increases in height. This value took a little bit of tweaking but it works well for the size of text I want.
+
+Next is the hierarchy for basis elements. This means defining the sizes for `h 1-6`, `p`, `a`, etc. The finished product looks as follows:
+
+```SASS
+p
+    font-size: 1.25rem
+    margin: 20px 0px 20px 0px
+    line-height: 1.6
+
+h1
+    font-weight: 700
+    font-size: 5rem
+    margin: 50px 0px 25px 0px
+
+h2
+    font-weight: 700
+    font-size: 3rem
+    margin: 50px 0px 15px 0px
+
+h3
+    font-size: 2rem
+    margin: 40px 0px 15px 0px
+
+a
+    color: $element-foreground
+    text-decoration-color: $element-background
+    font-weight: 500
+
+    &:hover
+        text-decoration-color: $element-foreground
+
+ul
+    font-size: 1.25rem
+    line-height: 1.6
+
+ol
+    font-size: 1.25rem
+    line-height: 1.6
+
+li
+    font-size: 1.25rem
+    margin: $medium 0 $medium none
+```
+
+Also defined will be default additional properties that should be applied across all instances of these elements, such as colour, margins, and line heights. With this set up I can simply use the appropriate element that would achieve the appearance I want. It's very simple to set up, is responsive, and is super easy to work with.
+
 ### Stripey Background
 
 The main visual styling will be a striped motif using the colours from the palette. This could be achieved by creating a background image in an image editing program and then setting that as the background image but I want a bit more control. It's also likely that I'll make tweaks and changes along the way so having something that I can control quickly if the colour palette changes or I decide on a different style will be helpful.
