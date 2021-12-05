@@ -11,6 +11,9 @@ $on-background-dim: $palette-4
 $element-background: #d1e8fa
 $element-foreground: #1a8de6
 
+$blockqoute-background: #dedede
+$blockqoute-foreground: #666
+
 $xx-large: 10%
 $x-large: 7.5%
 $large: 5%
@@ -213,6 +216,16 @@ a
         box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 15px -1px, rgba(0, 0, 0, 0.12) 0px 2px 12px -1px
         transition-duration: 0.4s
 
+blockquote
+    background: $blockqoute-background
+    color: $blockqoute-foreground
+    padding: $small
+    border-radius: $border-radius
+    border: 1px $blockqoute-foreground solid
+
+    p
+        margin: 0
+
 // inline code
 p code
     background: $element-background
@@ -224,6 +237,7 @@ p code
 // code blocks
 pre
     padding: 1rem
+    line-height: 1.6
     font-size: 1.25vh
     overflow: auto
     border-radius: $border-radius

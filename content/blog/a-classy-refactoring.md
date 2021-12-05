@@ -128,7 +128,7 @@ But it still has the issue that the value is then required for every enum type, 
 
 ### A Kotlin Mascot in Crab's Clothing
 
-> This title would have been better if the Kotlin Mascot had a name, or if it was an animal. It's also a rubbish mascot.
+> This title would have been better if the Kotlin Mascot had a name, or if it was an animal. Or if it had any redeeming features.
 
 The Rust implementation above can be recreated very well using the sealed class.
 
