@@ -2,7 +2,6 @@
 title = "Site Design"
 date = 2021-12-05
 description = "Where am I going to put all of these posts if I don't have a website? Best fix that..."
-draft = true
 +++
 
 I'd previously tried my hand with a [Udemy](!TODO) course on web development. It used React and Express to create a website for finding campsites. It was good, I finished it and thought it was about time I had a personal website.
