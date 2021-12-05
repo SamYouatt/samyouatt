@@ -422,7 +422,7 @@ Great. Now to add the validation to the response class and the viewmodel.
 
 ```Kotlin
 sealed class MedicationResponse() {
-    ✂️        
+    ...        
     fun isValid(): ValidationResponse {
         return when (val response = this) {
             is None -> ValidationResponse.Valid
@@ -463,9 +463,9 @@ Then lets update the form responses to implement the interface.
 
 ```Kotlin
 sealed class NameResponse: FormResponse {
-    ✂️
+    ...
     override fun isValid(): ValidationResponse {
-        ✂️
+        ...
     }
 }
 ```
