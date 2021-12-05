@@ -4,7 +4,7 @@ date = 2021-12-05
 description = "Where am I going to put all of these posts if I don't have a website? Best fix that..."
 +++
 
-I'd previously tried my hand with a [Udemy](!TODO) course on web development. It used React and Express to create a website for finding campsites. It was good, I finished it and thought it was about time I had a personal website.
+I'd previously tried my hand with a [Udemy](https://www.udemy.com/course/the-web-developer-bootcamp/) course on web development. It used React and Express to create a website for finding campsites. It was good, I finished it and thought it was about time I had a personal website.
 
 From my exposure to developers on social media it seemed like an essential step in my young developer life to have a website where I could show off my story and skills. This was about one year ago from this post and it just fizzled out.
 
@@ -14,7 +14,7 @@ Using Express and React to serve what was essentially a glorified PDF gave me a 
 
 Also pushed on me by the social media machine was Rust, and if you had no idea about the context of the language you would think it was the second coming of the Lord. In my eyes its just a more modern version of C or C++, which is by no means a bad thing and is unfairly simplifying the benefits Rust provides. But this isn't going to be a post about Rust, instead about something *made in Rust*.
 
-[Zola](getzola.net) is a static site generator, you feed it markdown and it generates you your HTML. Exactly what I'm after.
+[Zola](https://www.getzola.org/) is a static site generator, you feed it markdown and it generates you your HTML. Exactly what I'm after.
 
 It seems to build on the back of other static site generators but with its own advantages. I have no context for if any of the changes it makes would impact be, but what is important is that it is *made in Rust*.
 
@@ -76,7 +76,7 @@ Often times the best designs make use of multiple type faces so I went on the se
 The fonts I ended up using and their uses are as follows:
 
 - Poppins: headings.
-- Futura Now Headling: logo typography.
+- Futura Now Heading: logo typography.
 - Rubik: body text.
 - Source Code Pro: monospace.
 
@@ -157,7 +157,7 @@ This effect can be achieved in pure CSS, by taking advantage of the `after` pseu
 
 ### Syntax Highlighting
 
-By default the syntax highlighting offered by Zola is nothing special. There is a snippet offered on the [documentation page](zola code link here) which adds padding and lets the text wrap round so as not to break our poor little phones.
+By default the syntax highlighting offered by Zola is nothing special. There is a snippet offered on the [documentation page](https://www.getzola.org/documentation/content/syntax-highlighting/) which adds padding and lets the text wrap round so as not to break our poor little phones.
 
 Here is my main area of struggle with Zola, the documentation for this is just not very helpful. I got there in the end but with a little more explantation it could be much better.
 
@@ -165,7 +165,7 @@ Firstly, Zola allows some predefined code themes. You want to know what they are
 
 There is no list I can find, so I could sit there and try every combination of character on my keyboard from lengths of 3 to 10 and I might have a reasonably extensive list. Don't think I should have to do that though really. [A list would be nice Zola](https://github.com/getzola/zola/issues/1679).
 
-In the end though I ended up making my own theme, fingers crossed it didn't already exist just with a weird name, based on the [One-Light](link me) theme. I know, I know, but your eyes will surely recover. In the future I would like to implement a dark mode of the website and this will use a dark theme, but I think that light codeblocks will fit in with the light design better for the time being.
+In the end though I ended up making my own theme, fingers crossed it didn't already exist just with a weird name, based on the [One-Light](https://github.com/atom/one-light-syntax) theme. I know, I know, but your eyes will surely recover. In the future I would like to implement a dark mode of the website and this will use a dark theme, but I think that light codeblocks will fit in with the light design better for the time being.
 
 Creating my own theme was also a little bit of a pain. There isn't a list of the classes that Zola adds to your code to help you style it so I had to inspect element an already written code block to try and piece them together. If you are finding this and want a list I can save you a bit of time with what I have. It might not be all of them. The rest could be hiding, they could be any of us...
 
@@ -250,7 +250,7 @@ Those fancy codepen embeds you saw are provided by Codepen, they let you embed t
 
 Zola provides functionality to create custom shortcodes. These are commands that you call in the markdown that will summon the specified HTML spirit into the compiled HTML with whatever instructions you tell them. For the codepen the shortcode template is as follows:
 
-```HTML
+```HTML, hl_lines=3
 <div class="codepen-container">
   <p
     data-slug-hash="{{slug}}"
