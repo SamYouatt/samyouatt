@@ -2,7 +2,7 @@
 title = "Learning DNS"
 description = "In the labyrinth of connections and handshakes that is the internet you're going to need to give people directions to your home. DNS is the signpost of the internet, but not quite as simple as a pole with some text on..."
 draft = true
-date = "2000-02-02"
+date = 2000-02-02
 +++
 
 ## Remember the Name
