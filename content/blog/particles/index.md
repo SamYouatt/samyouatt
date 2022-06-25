@@ -2,7 +2,6 @@
 title = "Particles"
 date = 2022-06-15
 description = "Recreating a childhood favourite with some adulthood skills."
-draft = true
 +++
 
 Github repo for this project is [here](https://github.com/SamYouatt/particles).
@@ -37,16 +36,19 @@ Firstly consider a simple game with the premise of an emotionally indifferent bi
 In an OOP approach to modelling this game we might have the following system, in which distinct classes are used to define the bird, the structure pieces, and the cheeky oinkers:
 
 <!-- Image of oop stuff here -->
+{{ resize_image(path="blog/particles/oop.png", width=1, height=300 op="fit_height") }}
 
 Now consider how this game works. A fundamental part of this is gravity, all of the elements in this model are effected by it, every game loop we will enact the force of gravity to every little piece. Unfortunately for performance the transforms (positions) of all the little buggers have scampered off in every which direction all over the memory. Now the engine has to go and find every last one of them to check the values and change them.
 
 <!-- Diagram of objects stored in memory -->
+{{ resize_image(path="blog/particles/oop-memory.png", width=1, height=300 op="fit_height") }}
 
 Wouldn't it be much faster if we could keep all the values we are likely to be interacting with all at once all together? Why yes it would, enter the data driven approach.
 
 In this we would want to store the transforms of all the pieces in our model in contiguous memory. Then when it comes time to do our gravity iterations, not only does the engine not have to wander around the memory landscape rounding up all the little values like a primary school class released in a field, but perhaps we may be able to move the whole bundle of data onto the CPU cache.
 
 <!-- Image of contiguous memory -->
+{{ resize_image(path="blog/particles/dd-memory.png", width=1, height=300 op="fit_height") }}
 
 This data driven approach in games is facilitated by a design paradigm called an Entity Component System.
 
@@ -67,6 +69,7 @@ To understand it lets consider the three elements of the ECS:
 Let's create a simple version of our avian friend and our pig:
 
 <!-- ECS of bird and pig -->
+{{ resize_image(path="blog/particles/ecs.png", width=1, height=300 op="fit_height") }}
 
 It is easy to see that these are built up of a lot of the same components (in fact only differentiated by the `Pig` or `Bird` component in this example), meaning they will have a lot of the same behaviours. By decoupling these behaviours from the entities it allows the engine to act on all components contiguously, greatly improving performance and promoting easier parallelisation.
 
