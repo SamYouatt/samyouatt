@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ get_url(path="styles/styles.css") | safe }}" />
+    <link
+      rel="stylesheet"
+      href="{{ get_url(path="styles/styles.css") | safe }}"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,8 +24,15 @@
   </head>
 
   <body>
-    <h2 class="logo"><a class="animate-underline" href="/">Sam Youatt</a></h2>
-    <section class="main-content">{% block content %} {% endblock %}</section>
+    <nav>
+      <div>Sam Youatt</div>
+      <div>
+        <ul>
+          <li><a href="/blog">Blog</a></li>
+        </ul>
+      </div>
+    </nav>
+    <section class="main-content">{% block content %}{% endblock %}</section>
     <footer></footer>
   </body>
 </html>
