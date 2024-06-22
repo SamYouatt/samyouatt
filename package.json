@@ -5,9 +5,12 @@
   },
   "scripts": {
     "build": "NODE_ENV=production npx tailwindcss -i styles/styles.css -o static/styles/styles.css",
-    "watch": "npx tailwindcss -i styles/styles.css -o static/styles/styles.css; zola serve"
+    "tailwind:watch": "npx tailwindcss -i styles/styles.css -o static/styles/styles.css --watch",
+    "zola:serve": "zola serve",
+    "watch": "concurrently \"npm run tailwind:watch\" \"npm run zola:serve\""
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "prettier": "^3.3.2",
     "prettier-plugin-jinja-template": "^1.4.0",
     "prettier-plugin-tailwindcss": "^0.6.5"
