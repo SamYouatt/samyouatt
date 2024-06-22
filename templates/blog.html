@@ -1,8 +1,10 @@
 {% extends "base.html" %} {% block content %}
 <a href="/blog" class="animate-underline back-link">< Back to posts</a>
-<h1 class="blog-title">{{ page.title }}</h1>
-<p class="blog-date"><strong>{{ page.date }}</strong></p>
-<hr class="blog-top-hr" />
-<section class="blog-body">
-  {{ page.content | safe }} {% endblock content %}
-</section>
+<div class="prose prose-indigo prose-lg">
+  <h1 class="blog-title">{{ page.title }}</h1>
+  <p class="blog-date"><strong>{{ page.date }}</strong></p>
+  <hr class="blog-top-hr" />
+  <section class="blog-body">
+    {{ page.content | safe }} {% endblock content %}
+  </section>
+</div>
