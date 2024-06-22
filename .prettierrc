@@ -1,7 +1,15 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"],
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-jinja-template"],
   "tailwindConfig": "./tailwind.config.js",
   "htmlWhitespaceSensitivity": "ignore",
   "singleQuote": false,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "options": {
+        "parser": "jinja-template"
+      }
+    }
+  ]
 }
