@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./templates/**/*.html", "./theme/**/*.html"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        "hero": ["MADEDillan", "serif"],
+      }
+    },
   },
   plugins: [
       require("@tailwindcss/typography"),

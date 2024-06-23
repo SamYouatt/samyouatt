@@ -1320,16 +1320,8 @@ video {
   flex-direction: row;
 }
 
-.items-center {
-  align-items: center;
-}
-
 .justify-between {
   justify-content: space-between;
-}
-
-.justify-evenly {
-  justify-content: space-evenly;
 }
 
 .self-center {
@@ -1344,9 +1336,8 @@ video {
   padding: 1rem;
 }
 
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
+.font-hero {
+  font-family: MADEDillan, serif;
 }
 
 .text-xl {
@@ -1354,6 +1345,12 @@ video {
   line-height: 1.75rem;
 }
 
-.font-semibold {
-  font-weight: 600;
+@font-face {
+  font-family: 'MADEDillan';
+
+  src: url('/fonts/MADEDillan.otf') format('opentype');
+
+  font-weight: normal;
+
+  font-style: normal;
 }
