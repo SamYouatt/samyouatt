@@ -1194,6 +1194,11 @@ video {
   line-height: 1rem;
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
 .font-light {
   font-weight: 300;
 }
@@ -1289,6 +1294,21 @@ pre mark {
   margin: auto;
 }
 
+.prose-hr\:my-24 :is(:where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+}
+
+.prose-hr\:my-8 :is(:where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.prose-hr\:my-10 :is(:where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
 @media (min-width: 768px) {
   .md\:p-0 {
     padding: 0px;
@@ -1297,6 +1317,16 @@ pre mark {
   .md\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
+  }
+
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 
