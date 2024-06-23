@@ -29,15 +29,20 @@
     <title>Sam Youatt</title>
   </head>
 
-  <body class="bg-stone-50 dark:bg-stone-800 dark:text-stone-200 flex flex-col min-h-screen">
+  <body
+    class="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-800 dark:text-stone-200"
+  >
     <nav class="mb-8 flex flex-row justify-center p-4">
       <a href="/">
-        <span class="self-center font-hero text-2xl text-stone-800 dark:text-stone-200 md:text-3xl">
+        <span
+          class="self-center font-hero text-2xl text-stone-800 md:text-3xl dark:text-stone-200"
+        >
           Sam Youatt
         </span>
       </a>
     </nav>
     <section class="flex-1">{% block content %}{% endblock %}</section>
-    <footer class="pt-4 pb-8 text-center text-sm text-stone-300">Made by <a href="https://github.com/samyouatt" class="underline font-semibold">me</a> in York</footer>
+    <!-- prettier-ignore -->
+    <footer class="pt-4 pb-8 text-center text-sm text-stone-300 dark:text-stone-600">Made by <a href="https://github.com/samyouatt" class="underline font-semibold">me</a> in York</footer>
   </body>
 </html>
