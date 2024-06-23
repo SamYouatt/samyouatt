@@ -5,7 +5,10 @@
       <p>
         I'm Sam, a software engineer currently creating tools for Salesforce
         DevOps at
-        <a href="https://www.gearset.com" class="text-cyan-500 underline">
+        <a
+          href="https://www.gearset.com"
+          class="text-cyan-500 underline dark:text-cyan-400"
+        >
           Gearset
         </a>
       </p>
@@ -13,20 +16,22 @@
     <div class="mt-8">
       {% for page in section.pages %}
         {% set post_date = page.date | date(format="%B %d, %Y") %}
-        <h2 class="mb-1 text-xl font-medium text-stone-900">
+        <h2 class="mb-1 text-xl font-medium text-stone-900 dark:text-stone-200">
           <a
             href="{{ page.permalink | safe }}"
-            class="underline decoration-cyan-500 decoration-dashed underline-offset-4 hover:decoration-solid"
+            class="underline decoration-cyan-500 decoration-dashed underline-offset-4 hover:decoration-solid dark:decoration-cyan-400"
           >
             {{ page.title }}
           </a>
         </h2>
-        <p class="text-xs font-light text-stone-500">{{ post_date }}</p>
-        <p class="my-2 leading-relaxed text-stone-700">
+        <p class="text-xs font-light text-stone-500 dark:text-stone-400">
+          {{ post_date }}
+        </p>
+        <p class="my-2 leading-relaxed text-stone-700 dark:text-stone-300">
           {{ page.description }}
         </p>
         {% if not loop.last %}
-          <hr class="my-4" />
+          <hr class="my-4 dark:border-stone-600" />
         {% endif %}
       {% endfor %}
     </div>
