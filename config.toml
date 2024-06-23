@@ -16,6 +16,7 @@ highlight_themes_css = [
     { theme = "OneHalfLight", filename = "one-half-light.css"},
     { theme = "OneHalfDark", filename = "one-half-dark.css"},
 ]
+render_emoji = true
 
 [extra]
 # Put all your custom variables here
