@@ -1246,7 +1246,7 @@ video {
 @font-face {
   font-family: 'MADEDillan';
 
-  src: url('/fonts/MADEDillan.otf') format('opentype');
+  src: url('/fonts/MADEDillan.woff2') format('woff2');
 
   font-weight: normal;
 
