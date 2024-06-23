@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'MADEDillan';
+  src: url('/fonts/MADEDillan.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  overflow-y: scroll;
+}
+

@@ -1,10 +1,39 @@
-{% extends "base.html" %} {% block content %}
-<!-- <h1 class="title">Sam Youatt</h1> -->
-<div class="links">
-  <div class="links-inner">
-    <h1 class="main-link">
-      <a class="animate-underline main-link" href="/blog/">Blog</a>
-    </h1>
+{% extends "base.html" %}
+{% block content %}
+  <div class="m-auto max-w-prose px-4 md:px-0">
+    <div>
+      <p>
+        I'm Sam, a software engineer currently creating tools for Salesforce
+        DevOps at
+        <a
+          href="https://www.gearset.com"
+          class="text-cyan-500 underline dark:text-cyan-400"
+        >
+          Gearset
+        </a>
+      </p>
+    </div>
+    <div class="mt-8">
+      {% for page in section.pages %}
+        {% set post_date = page.date | date(format="%B %d, %Y") %}
+        <h2 class="mb-1 text-xl font-medium text-stone-900 dark:text-stone-200">
+          <a
+            href="{{ page.permalink | safe }}"
+            class="underline decoration-cyan-500 decoration-dashed underline-offset-4 hover:decoration-solid dark:decoration-cyan-400"
+          >
+            {{ page.title }}
+          </a>
+        </h2>
+        <p class="text-xs font-light text-stone-500 dark:text-stone-400">
+          {{ post_date }}
+        </p>
+        <p class="my-2 leading-relaxed text-stone-700 dark:text-stone-300">
+          {{ page.description }}
+        </p>
+        {% if not loop.last %}
+          <hr class="my-4 dark:border-stone-600" />
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
-</div>
 {% endblock content %}

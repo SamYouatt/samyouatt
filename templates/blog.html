@@ -1,10 +1,10 @@
 {% extends "base.html" %} {% block content %}
-<a href="/blog" class="animate-underline back-link">< Back to posts</a>
-<div class="prose prose-indigo prose-lg">
-  <h1 class="blog-title">{{ page.title }}</h1>
-  <p class="blog-date"><strong>{{ page.date }}</strong></p>
-  <hr class="blog-top-hr" />
-  <section class="blog-body">
+{% set post_date = page.date | date(format="%B %d, %Y") %}
+<article class="prose dark:prose-invert prose-stone m-auto prose-img:m-auto px-4 md:p-0 prose-a:text-cyan-500 dark:prose-a:text-cyan-400 prose-hr:my-8">
+  <h1 class="mb-2">{{ page.title }}</h1>
+  <p class="m-0 text-stone-400 dark:text-stone-500">{{ post_date }}</p>
+  <hr class="dark:border-stone-600"/>
+  <section>
     {{ page.content | safe }} {% endblock content %}
   </section>
-</div>
+</article>

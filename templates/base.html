@@ -1,28 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ get_url(path="styles/styles.css") | safe }}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Rubik:wght@300;400;500;600;700;800&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
+      href="{{ get_url(path="styles/styles.css") | safe }}"
     />
     <link
       rel="preload"
-      href="FuturaNowHeadline-Bd.woff2"
+      href="{{ get_url(path="/fonts/MADEDillan.otf") }}"
       as="font"
-      type="font/woff2"
-      crossorigin
+      type="font/otf"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-dark.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-light.css"
+      media="(prefers-color-scheme: light)"
     />
     <title>Sam Youatt</title>
   </head>
 
-  <body>
-    <h2 class="logo"><a class="animate-underline" href="/">Sam Youatt</a></h2>
-    <section class="main-content">{% block content %} {% endblock %}</section>
+  <body class="bg-stone-50 dark:bg-stone-800 dark:text-stone-200">
+    <nav class="mb-8 flex flex-row justify-center p-4">
+      <a href="/">
+        <span class="self-center font-hero text-2xl text-stone-900 dark:text-stone-200 md:text-3xl">
+          Sam Youatt
+        </span>
+      </a>
+    </nav>
+    <section>{% block content %}{% endblock %}</section>
     <footer></footer>
   </body>
 </html>
