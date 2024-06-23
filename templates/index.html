@@ -1,14 +1,32 @@
-{% extends "base.html" %} {% block content %}
-<!-- <h1 class="title">Sam Youatt</h1> -->
-<p>I'm Sam, a software engineer currently building features at Gearset</p>
-<div class="blog-list-container">
-  {% for page in section.pages %}
-  <div class="blog-list-card">
-    <h3 class="blog-list-title">{{ page.title }}</h3>
-    <p class="blog-list-date">{{ page.date }}</p>
-    <p class="blog-list-description">{{ page.description }}</p>
-    <a href="{{ page.permalink | safe }}" class="blog-list-read">Read</a>
+{% extends "base.html" %}
+{% block content %}
+  <div class="m-auto max-w-prose px-4 md:px-0">
+    <div>
+      <p>
+        I'm Sam, a software engineer currently creating tools for Salesforce
+        DevOps at
+        <a href="www.gearset.com" class="text-cyan-500 underline">Gearset</a>
+      </p>
+    </div>
+    <div class="mt-8">
+      {% for page in section.pages %}
+        {% set post_date = page.date | date(format="%B %d, %Y") %}
+        <h2 class="mb-1 text-xl font-medium text-stone-900">
+          <a
+            href="{{ page.permalink | safe }}"
+            class="underline decoration-cyan-500 decoration-dashed underline-offset-4 hover:decoration-solid"
+          >
+            {{ page.title }}
+          </a>
+        </h2>
+        <p class="text-xs font-light text-stone-500">{{ post_date }}</p>
+        <p class="my-2 leading-relaxed text-stone-700">
+          {{ page.description }}
+        </p>
+        {% if not loop.last %}
+          <hr class="my-4" />
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
-  {% endfor %}
-</div>
 {% endblock content %}

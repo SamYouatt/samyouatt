@@ -7,7 +7,13 @@
       rel="stylesheet"
       href="{{ get_url(path="styles/styles.css") | safe }}"
     />
-    <link rel="preload" href="{{ get_url(path="/fonts/MADEDillan.otf") }}" as="font" type="font/otf" crossorigin="anonymous" />
+    <link
+      rel="preload"
+      href="{{ get_url(path="/fonts/MADEDillan.otf") }}"
+      as="font"
+      type="font/otf"
+      crossorigin="anonymous"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,17 +30,15 @@
     <title>Sam Youatt</title>
   </head>
 
-  <body class="bg-stone-50">
-    <nav class="flex flex-row justify-center p-4 mb-8">
-        <a href="/">
-          <span
-            class="self-center text-2xl font-hero"
-          >
-            Sam Youatt
-          </span>
-        </a>
+  <body class="bg-stone-50 dark:bg-stone-700">
+    <nav class="mb-8 flex flex-row justify-center p-4">
+      <a href="/">
+        <span class="self-center font-hero text-2xl text-stone-900">
+          Sam Youatt
+        </span>
+      </a>
     </nav>
-    <section class="main-content">{% block content %}{% endblock %}</section>
+    <section>{% block content %}{% endblock %}</section>
     <footer></footer>
   </body>
 </html>
