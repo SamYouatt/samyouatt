@@ -1427,6 +1427,11 @@ video {
   padding: 1rem;
 }
 
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .text-justify {
   text-align: justify;
 }
@@ -1461,4 +1466,10 @@ video {
 
 .prose-img\:m-auto :is(:where(img):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
   margin: auto;
+}
+
+@media (min-width: 768px) {
+  .md\:p-0 {
+    padding: 0px;
+  }
 }
