@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://www.samyouatt.dev/styles/styles.css"
+    />
+    <link
+      rel="preload"
+      href="https://www.samyouatt.dev/fonts/MADEDillan.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-dark.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-light.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <title>Sam Youatt</title>
+  </head>
+
+  <body
+    class="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-800 dark:text-stone-200"
+  >
+    <nav class="mb-8 flex flex-row justify-center p-4">
+      <a href="/">
+        <span
+          class="self-center font-hero text-2xl text-stone-800 md:text-3xl dark:text-stone-200"
+        >
+          Sam Youatt
+        </span>
+      </a>
+    </nav>
+    <section class="flex-1">
+  
+  <article
+    class="prose prose-stone m-auto px-4 dark:prose-invert prose-a:text-cyan-500 prose-img:m-auto prose-hr:my-8 md:p-0 dark:prose-a:text-cyan-400"
+  >
+    <h1 class="mb-2">A Classy Refactoring</h1>
+    <p class="m-0 text-stone-400 dark:text-stone-500">November 29, 2021</p>
+    <hr class="dark:border-stone-600" />
+    <section><p>Picture the scene. An application that gathers demographic information from patients ready for use in medical diagnosis. The user will be asked a range of questions, and these are in various forms. Some are radio buttons, others are text fields. However, some are more complex. Radio buttons can be combined with a textbox if a certain radio button is clicked, checkbox fields can have multiple boxes checked but only one if it is the 'None of the above' option. So how to represent the responses of the patient in the code?</p>
+<h2 id="messily-at-the-moment">Messily, at the moment</h2>
+<p>First lets look at the easiest one, radio buttons. Radio buttons are those round buttons that only let you click one option.</p>
+<p>The options for the buttons are currently stored in enum classes, which is fine. The issue is that these are then stored directly in the viewmodel, without any additional abstraction.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">enum</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Gender</span> { <span class="z-constant z-other z-kotlin">NONE_SELECTED</span>, Male, Female, Neutral }
+
+<span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> In viewmodel
+</span><span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">_gender</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MutableLiveData(FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>Gender<span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-constant z-other z-kotlin">NONE_SELECTED</span>)
+</span></code></pre>
+<p>The values are set in the viewmodel, again this is actually fine.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setGender</span>(<span class="z-variable z-parameter z-function z-kotlin">gender</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> FormConstants.Gender) {
+    _gender<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> gender
+}
+</span></code></pre>
+<p>Then the validation is also handled in the viewmodel.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">validateGender</span>() {
+    <span class="z-keyword z-control z-kotlin">when</span> (_gender<span class="z-keyword z-operator z-dot z-kotlin">.</span>value) {
+        FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>Gender<span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-constant z-other z-kotlin">NONE_SELECTED</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+            <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">newErrors</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> _demographicsErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>toMutableList() <span class="z-keyword z-operator z-elvis z-kotlin">?:</span> mutableListOf()
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>no_gender_selected)
+            _demographicsErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> newErrors
+            _validGender<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        }
+        <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _validGender<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+    }
+}
+</span></code></pre>
+<p>This is one of the main things I want to change, I want the validation of a response to be handled by the response. This means that if the validation requirements of a response change then it can be found easily and changed for any place that response is used.</p>
+<p>Now lets look at one a bit more complex, the name response. The user can enter their name but they also have a checkbox for unknown. If they choose unknown then the textbox for the name is disabled. Currently this is represented in the viewmodel with two separate fields.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">_name</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MutableLiveData(<span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span><span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>)
+<span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">_unknownName</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>)
+</span></code></pre>
+<p>Setting is performed by two separate functions, one for setting the name and one for toggling unknown.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setName</span>(<span class="z-variable z-parameter z-function z-kotlin">name</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span>) {
+    _name<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> name
+}
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setUnknownName</span>(<span class="z-variable z-parameter z-function z-kotlin">isUnknown</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+    _unknownName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isUnknown
+}
+</span></code></pre>
+<p>Again, the viewmodel has the validation function.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">newErrors</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> _demographicsErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>toMutableList() <span class="z-keyword z-operator z-elvis z-kotlin">?:</span> mutableListOf()
+    <span class="z-keyword z-control z-kotlin">if</span> (unknownName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>) {
+        _validName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+    } <span class="z-keyword z-control z-kotlin">else</span> {
+        <span class="z-keyword z-control z-kotlin">if</span> (<span class="z-keyword z-operator z-logical z-kotlin">!</span>FormValidation<span class="z-keyword z-operator z-dot z-kotlin">.</span>isNonEmptyString(_name<span class="z-keyword z-operator z-dot z-kotlin">.</span>value)) {
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>name_cannot_be_empty)
+            _validName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        } <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-control z-kotlin">if</span> (FormValidation<span class="z-keyword z-operator z-dot z-kotlin">.</span>containsNumbers(_name<span class="z-keyword z-operator z-dot z-kotlin">.</span>value)) {
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>name_cannot_contain_numbers)
+            _validName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        } <span class="z-keyword z-control z-kotlin">else</span> {
+            _validName<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormConstants<span class="z-keyword z-operator z-dot z-kotlin">.</span>FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        }
+    }
+    _demographicsErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> newErrors
+</span></code></pre>
+<p>It is worth pointing out now how the validation function works, and why the list of errors is needed. When the user clicks to go to the next page the form is validated, if there are errors then these need to be tracked so the user can be informed. The error list is a list of the ids of the string resources that represent the errors. So like can be seen above for the name validation, if the name contains numbers then the error that explains what is wrong is added to the list.</p>
+<p>The issue is a bit more apparent for this response type. Here two different fields in the viewmodel are considered for the validation, when really they are the same response. An implementation that encapsulates both parts in a single response would be much easier to understand and modify later.</p>
+<h2 id="a-better-system-is-needed">A Better System is Needed</h2>
+<p>A key characteristic in the name response is that the user can either enter a name, or select unknown, but not both. So we need some data type that will capture this behaviour.</p>
+<p>I like the way Rust implements enums, different values in the enums can hold different data, or none at all.</p>
+<pre data-lang="Rust" class="language-Rust z-code"><code class="language-Rust" data-lang="Rust"><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-storage z-type z-enum z-rust">enum</span> <span class="z-entity z-name z-enum z-rust">NameResponse</span> <span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+    Name<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-keyword z-operator z-bitwise z-rust">&amp;</span><span class="z-storage z-type z-rust">str</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span>
+    Unknown<span class="z-punctuation z-separator z-rust">,</span>
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>The above implementation would be ideal. Then the response could be a <code>NameResponse</code>, it would either be <code>NameResponse::Name(&quot;users name&quot;)</code> or <code>NameResponse::Unknown</code>.</p>
+<p>So, can we implement this type of system using Kotlin? Java does have support for enums with values, but it's not really very nice.</p>
+<pre data-lang="Java" class="language-Java z-code"><code class="language-Java" data-lang="Java"><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-storage z-modifier z-java">public</span> <span class="z-meta z-class z-identifier z-java"><span class="z-storage z-type z-java">enum</span> <span class="z-entity z-name z-class z-java">NameResponse</span></span><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span>
+    <span class="z-support z-class z-java">Name</span><span class="z-punctuation z-separator z-comma z-java">,</span>
+    <span class="z-meta z-field z-java">Unknown</span><span class="z-punctuation z-terminator z-java">;</span>
+
+    <span class="z-storage z-modifier z-java">public</span> <span class="z-storage z-modifier z-java">final</span> <span class="z-support z-class z-java">String</span> <span class="z-meta z-field z-java">value</span><span class="z-punctuation z-terminator z-java">;</span>
+
+    <span class="z-storage z-modifier z-java">public</span> <span class="z-meta z-method z-java"><span class="z-meta z-method z-identifier z-java"><span class="z-entity z-name z-function z-constructor z-java">NameResponse</span></span><span class="z-meta z-method z-parameters z-java"><span class="z-meta z-parens z-java"><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-support z-class z-java">String</span> <span class="z-variable z-parameter z-java">value</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span></span> <span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span></span></span></span><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">
+        <span class="z-variable z-language z-java">this</span><span class="z-punctuation z-accessor z-dot z-java">.</span>value <span class="z-meta z-assignment z-rhs z-java"><span class="z-keyword z-operator z-assignment z-java">=</span> value</span><span class="z-punctuation z-terminator z-java">;</span>
+    <span class="z-punctuation z-section z-block z-end z-java">}</span></span></span>
+<span class="z-punctuation z-section z-block z-end z-java">}</span></span></span></span>
+</span></code></pre>
+<p>Fortunately, as is generally the case, Kotlin's syntax is much nicer.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">enum</span> NameResponse(value<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span>) { Name, Unknown }
+</span></code></pre>
+<p>But it still has the issue that the value is then required for every enum type, the <code>Unknown</code> value doesn't need to hold any data. This is where <em>sealed classes</em> come in.</p>
+<h3 id="a-kotlin-mascot-in-crab-s-clothing">A Kotlin Mascot in Crab's Clothing</h3>
+<blockquote>
+<p>This title would have been better if the Kotlin Mascot had a name, or if it was an animal. Or if it had any redeeming features.</p>
+</blockquote>
+<p>The Rust implementation above can be recreated very well using the sealed class.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">NameResponse</span> {
+    <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Name</span>(<span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">name</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span> <span class="z-keyword z-operator z-declaration z-kotlin">=</span> <span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span><span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>)<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">NameResponse</span>()
+    <span class="z-storage z-modifier z-kotlin">object</span> <span class="z-entity z-name z-type z-class z-kotlin">Unknown</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">NameResponse</span>()
+}
+</span></code></pre>
+<p>Okay the syntax isn't quite as succinct but it does now have the functionality we are after. The viewmodel can then hold a <code>NameResponse</code> instead of two separate fields.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">_nameResponse</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MutableLiveData&lt;NameResponse&gt;(NameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Name())
+</span></code></pre>
+<p>Now we need to handle setting the response. This will be handled by two separate functions as before, although modified.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setName</span>(<span class="z-variable z-parameter z-function z-kotlin">name</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span>) {
+    _nameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> NameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Name(name)
+}
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setUnknownName</span>(<span class="z-variable z-parameter z-function z-kotlin">isUnknown</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+    <span class="z-keyword z-control z-kotlin">when</span> (isUnknown) {
+        <span class="z-constant z-language z-kotlin">true</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _nameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> NameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Unknown
+        <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _nameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> NameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Name()
+    }
+}
+</span></code></pre>
+<p>Here we can see that if the checkbox for unknown name is set to checked then the response is set to <code>Unknown</code>, otherwise it is returned to a blank text response.</p>
+<h3 id="seeking-validation">Seeking Validation</h3>
+<p>Now let's look to the other goal, moving validation to within the response. A validation function can be added to the sealed class, but we also need to consider what it should return.</p>
+<p>I want to maintain the ability to reference the appropriate error string resource depending on the validation and make it easy for the viewmodel to track these when they come in. This can be done with <em>another</em> sealed class.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">ValidationResponse</span> {
+    <span class="z-storage z-modifier z-kotlin">object</span> <span class="z-entity z-name z-type z-class z-kotlin">Valid</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">ValidationResponse</span>()
+    <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Invalid</span>(<span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">reason</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Int</span>)<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">ValidationResponse</span>()
+}
+</span></code></pre>
+<p>Now the validation function for the name response can make use of this new type.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">NameResponse</span> {
+    <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Name</span>(<span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">name</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span> <span class="z-keyword z-operator z-declaration z-kotlin">=</span> <span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span><span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>)<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">NameResponse</span>()
+    <span class="z-storage z-modifier z-kotlin">object</span> <span class="z-entity z-name z-type z-class z-kotlin">Unknown</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">NameResponse</span>()
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">isValid</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> ValidationResponse {
+        <span class="z-keyword z-control z-kotlin">return</span> <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-constant z-language z-kotlin">this</span>) {
+            <span class="z-keyword z-operator z-kotlin">is</span> Name <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+                <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">name</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">this</span><span class="z-keyword z-operator z-dot z-kotlin">.</span>name
+
+                <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> name cannot be a bunch of spaces
+</span>                <span class="z-keyword z-control z-kotlin">if</span> (name<span class="z-keyword z-operator z-dot z-kotlin">.</span>isBlank()) {
+                    <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> return the error that says &quot;Name cannot be empty&quot;
+</span>                    <span class="z-keyword z-control z-kotlin">return</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>name_cannot_be_empty)
+                }
+
+                <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> name cannot contain numbers, sorry Elon should have picked a proper name
+</span>                <span class="z-keyword z-control z-kotlin">if</span> (name<span class="z-keyword z-operator z-dot z-kotlin">.</span>contains(Regex(<span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span>[0-9]+<span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>))) {
+                    <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> return the error that says &quot;Name cannot contain numbers&quot;
+</span>                    <span class="z-keyword z-control z-kotlin">return</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>name_cannot_contain_numbers)
+                }
+
+                <span class="z-keyword z-control z-kotlin">return</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+            }
+            <span class="z-keyword z-operator z-kotlin">is</span> Unknown <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        }
+    }
+}
+</span></code></pre>
+<p>Great! Now the response will either be <code>Valid</code>, meaning the response is ok, or <code>Invalid</code> and will contain the id of the appropriate error string. Much better. If extra validation steps are added later on to the name then they can easily be added in the appropriate response class, rather than in the viewmodel.</p>
+<p>The viewmodel still needs to call the validation though, and it should handle the error ids is there are any.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">validateName</span>() {
+    <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">newErrors</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>toMutableList() <span class="z-keyword z-operator z-elvis z-kotlin">?:</span> mutableListOf()
+    <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-storage z-modifier z-kotlin">val</span> validationResponse <span class="z-keyword z-operator z-assignment z-kotlin">=</span> nameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>isValid()) {
+        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> validNameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> add the error that will be shown to the user to the list
+</span>        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(validationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>reason)
+            validNameResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        }
+    }
+    <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> live data will not alert observers if its contained values change,
+</span>    <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> so instead the value must be fully reassigned
+</span>    errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> newErrors
+}
+</span></code></pre>
+<p>Great, now we have a much simpler validation function in the viewmodel, one that hands off the bulk of the validation to the response class itself.</p>
+<h3 id="back-to-genders">Back to Genders</h3>
+<p>The genders response from earlier can be given a similar treatment, with some slight modifications since it doesn't need to track two possible types of responses.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">enum</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">GenderResponse</span> {
+    <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> 👇 need to represent the default state of radio buttons when none is selected
+</span>    Pending, Male, Female, Neutral<span class="z-punctuation z-terminator z-kotlin">;</span>
+    
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">isValid</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> ValidationResponse {
+        <span class="z-keyword z-control z-kotlin">return</span> <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-constant z-language z-kotlin">this</span>) {
+            <span class="z-keyword z-operator z-kotlin">is</span> Pending <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>no_gender_selected)
+            <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        }
+    }    
+}
+</span></code></pre>
+<p>Lovely. The validation function in the viewmodel gets the same treatment as the name.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">validateGender</span>() {
+    <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">newErrors</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>toMutableList() <span class="z-keyword z-operator z-elvis z-kotlin">?:</span> mutableListOf()
+    <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-storage z-modifier z-kotlin">val</span> validationResponse <span class="z-keyword z-operator z-assignment z-kotlin">=</span> genderResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>isValid()) {
+        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> validGenderResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(validationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>reason)
+            validGenderResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        }
+    }
+    errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> newErrors
+}
+</span></code></pre>
+<h3 id="check-your-checkboxes">Check Your Checkboxes</h3>
+<p>There was another type of response mentioned in the introduction that needs a more significant facelift. Some of the questions require that multiple checkboxes can be checked, except only one if the option is 'None of the above'. Even worse is that the user may be given the option of 'Other' and then they can enter a custom value.</p>
+<p><em>Shudders.</em></p>
+<p>Currently this is done, well, I'll just let you look.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Medication</span>(
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_none</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">none</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _none,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_warfarin</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">warfarin</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _warfarin,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_digoxin</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">digoxin</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _digoxin,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_bBlockers</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">bBlockers</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _bBlockers,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_cancer</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">cancer</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _cancer,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_other</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-constant z-language z-kotlin">false</span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">other</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">Boolean</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _other,
+    <span class="z-storage z-modifier z-kotlin">private</span> <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">_otherText</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">String</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> MutableLiveData(<span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span><span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>),
+    <span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">otherText</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> LiveData&lt;<span class="z-storage z-type z-buildin z-kotlin">String</span>&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> _otherText
+) {
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setNone</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _warfarin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+        _digoxin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+        _bBlockers<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+        _cancer<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+        _other<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setWarfarin</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _warfarin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setDigoxin</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _digoxin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setBBlockers</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _bBlockers<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setCancer</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _cancer<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setOther</span>(<span class="z-variable z-parameter z-function z-kotlin">isSelected</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span>) {
+        _other<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> isSelected
+        _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">false</span>
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setOtherText</span>(<span class="z-variable z-parameter z-function z-kotlin">text</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span>) {
+        _otherText<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> text
+    }
+
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">validateSelf</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">Boolean</span> {
+        <span class="z-keyword z-control z-kotlin">if</span> (_other<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span> <span class="z-keyword z-operator z-logical z-kotlin">&amp;&amp;</span> _otherText<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>isNotBlank() <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>) {
+            <span class="z-keyword z-control z-kotlin">return</span> <span class="z-constant z-language z-kotlin">true</span>
+        } <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-control z-kotlin">if</span> (_other<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span> <span class="z-keyword z-operator z-logical z-kotlin">&amp;&amp;</span> _otherText<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>isNotBlank() <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">false</span>) {
+            <span class="z-keyword z-control z-kotlin">return</span> <span class="z-constant z-language z-kotlin">false</span>
+        }
+
+        <span class="z-keyword z-control z-kotlin">return</span> _none<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>
+                <span class="z-keyword z-operator z-logical z-kotlin">||</span> _warfarin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>
+                <span class="z-keyword z-operator z-logical z-kotlin">||</span> _digoxin<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>
+                <span class="z-keyword z-operator z-logical z-kotlin">||</span> _bBlockers<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>
+                <span class="z-keyword z-operator z-logical z-kotlin">||</span> _cancer<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-comparison z-kotlin">==</span> <span class="z-constant z-language z-kotlin">true</span>
+    }
+}
+</span></code></pre>
+<p>Yeah. It's not all bad, this one already has its own validation function contained within itself, yay. Also, yes, that is live data contained within the class that will be stored in other live data.</p>
+<p>Okay, back to the drawing board. First let's encapsulate the options of the checkboxes in a better way, with enums.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">enum</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Medication</span> { Warfarin, Digoxin, BBlockers, Cancer }
+</span></code></pre>
+<p>Now the sealed class. It needs to represent three main states:</p>
+<ol>
+<li>None - no checkboxes have been clicked at all.</li>
+<li>Some medication checkboxes have been clicked.</li>
+<li>Other - the user has entered some custom medication.</li>
+</ol>
+<p>Right, so we can create the sealed class.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">MedicationResponse</span> {
+    <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">MedicationSet</span>(<span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">medicationSet</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-collection z-kotlin">Set</span>&lt;Medication&gt; <span class="z-keyword z-operator z-declaration z-kotlin">=</span> setOf())<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">MedicationResponse</span>()
+    <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">Other</span>(<span class="z-storage z-modifier z-kotlin">val</span> <span class="z-variable z-parameter z-function z-kotlin">medication</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span> <span class="z-keyword z-operator z-declaration z-kotlin">=</span> <span class="z-string z-quoted z-double z-kotlin"><span class="z-punctuation z-definition z-string z-begin z-kotlin">&quot;</span><span class="z-punctuation z-definition z-string z-end z-kotlin">&quot;</span></span>)<span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">MedicationResponse</span>()
+    <span class="z-storage z-modifier z-kotlin">object</span> <span class="z-entity z-name z-type z-class z-kotlin">None</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">MedicationResponse</span>()
+}
+</span></code></pre>
+<p>The medications selected are stored in a set, perfect since each can only appear once, and it will make it easy to add and remove them.</p>
+<p>Now to set up the viewmodel so the response can be set.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">_medicationResponse</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MutableLiveData&lt;MedicationResponse&gt;(MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet())
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">toggleMedication</span>(<span class="z-variable z-parameter z-function z-kotlin">medication</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> Medication) {
+    <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-storage z-modifier z-kotlin">val</span> current <span class="z-keyword z-operator z-assignment z-kotlin">=</span> _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value) {
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> turn off no and populate set
+</span>        <span class="z-keyword z-operator z-kotlin">is</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>None, <span class="z-keyword z-operator z-kotlin">is</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Other <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet(setOf(medication))
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> a medication is already ticked, update the set appropriately
+</span>        <span class="z-keyword z-operator z-kotlin">is</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+            <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">medicationSet</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> current<span class="z-keyword z-operator z-dot z-kotlin">.</span>medicationSet<span class="z-keyword z-operator z-dot z-kotlin">.</span>toMutableSet()
+            <span class="z-keyword z-control z-kotlin">if</span> (medicationSet<span class="z-keyword z-operator z-dot z-kotlin">.</span>contains(medication)) {
+                medicationSet<span class="z-keyword z-operator z-dot z-kotlin">.</span>remove(medication)
+            } <span class="z-keyword z-control z-kotlin">else</span> {
+                medicationSet<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(medication)
+            }
+            _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet(medicationSet)
+        }
+    }
+    _validMedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Unvalidated
+}
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">toggleMedicationNone</span>() {
+    <span class="z-keyword z-control z-kotlin">when</span> (_medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value) {
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> deselect none and return to empty set
+</span>        <span class="z-keyword z-operator z-kotlin">is</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>None <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet()
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> select none
+</span>        <span class="z-keyword z-control z-kotlin">else</span> <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>None
+    }
+}
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">toggleMedicationOther</span>() {
+    <span class="z-keyword z-control z-kotlin">if</span> (_medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-kotlin">is</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Other) {
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> other checkbox is toggled off -&gt; set to set of no medications
+</span>        _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>MedicationSet()
+    } <span class="z-keyword z-control z-kotlin">else</span> {
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> other checkbox is toggled on -&gt; set to blank string
+</span>        _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Other()
+    }
+    _validMedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Unvalidated
+}
+
+<span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">setMedicationFromText</span>(<span class="z-variable z-parameter z-function z-kotlin">medication</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-storage z-type z-buildin z-kotlin">String</span>) {
+    _medicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> MedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Other(medication)
+    _validMedicationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Unvalidated
+}
+</span></code></pre>
+<p>Great. Now to add the validation to the response class and the viewmodel.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">MedicationResponse</span>() {
+    <span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span>        
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">isValid</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> ValidationResponse {
+        <span class="z-keyword z-control z-kotlin">return</span> <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-storage z-modifier z-kotlin">val</span> response <span class="z-keyword z-operator z-assignment z-kotlin">=</span> <span class="z-constant z-language z-kotlin">this</span>) {
+            <span class="z-keyword z-operator z-kotlin">is</span> None <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+            <span class="z-keyword z-operator z-kotlin">is</span> MedicationSet <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+                <span class="z-keyword z-control z-kotlin">if</span> (response<span class="z-keyword z-operator z-dot z-kotlin">.</span>medicationSet<span class="z-keyword z-operator z-dot z-kotlin">.</span>isEmpty()) {
+                    ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>medication_information_not_given)
+                } <span class="z-keyword z-control z-kotlin">else</span> {
+                    ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+                }
+            }
+            <span class="z-keyword z-operator z-kotlin">is</span> Other <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+                <span class="z-keyword z-control z-kotlin">if</span> (response<span class="z-keyword z-operator z-dot z-kotlin">.</span>medication<span class="z-keyword z-operator z-dot z-kotlin">.</span>isBlank()) {
+                    ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid(R<span class="z-keyword z-operator z-dot z-kotlin">.</span>string<span class="z-keyword z-operator z-dot z-kotlin">.</span>medication_other_no_text)
+                } <span class="z-keyword z-control z-kotlin">else</span> {
+                    ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+                }
+            }
+        }
+    }
+}
+</span></code></pre>
+<p>That is a marked improvement. Good work me.</p>
+<h2 id="generic-title">Generic Title</h2>
+<p>There is one final improvement to make. All those validation functions in the viewmodels look remarkably similar. In fact they are all identical, so let's replace them.</p>
+<p>First we need a way to ensure that the validation is acting on a form response. Interface time.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">interface</span> <span class="z-entity z-name z-type z-class z-kotlin">FormResponse</span> {
+    <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">isValid</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> ValidationResponse
+}
+</span></code></pre>
+<p>Then lets update the form responses to implement the interface.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-storage z-modifier z-kotlin">sealed</span> <span class="z-storage z-modifier z-kotlin">class</span> <span class="z-entity z-name z-type z-class z-kotlin">NameResponse</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> <span class="z-entity z-other z-inherited-class z-kotlin">FormResponse</span> {
+    <span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span>
+    <span class="z-storage z-modifier z-kotlin">override</span> <span class="z-keyword z-other z-kotlin">fun</span> <span class="z-entity z-name z-function z-kotlin">isValid</span>()<span class="z-keyword z-operator z-declaration z-kotlin">:</span> ValidationResponse {
+        <span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span><span class="z-keyword z-operator z-dot z-kotlin">.</span>
+    }
+}
+</span></code></pre>
+<p>Now lets modify the viewmodel validation to make use of generics, acting only on <code>FormResponse</code> implementations.</p>
+<pre data-lang="Kotlin" class="language-Kotlin z-code"><code class="language-Kotlin" data-lang="Kotlin"><span class="z-source z-Kotlin"><span class="z-keyword z-other z-kotlin">fun</span> &lt;<span class="z-storage z-type z-generic z-kotlin">T</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> FormResponse&gt; <span class="z-entity z-name z-function z-kotlin">validateResponse</span>(
+    <span class="z-variable z-parameter z-function z-kotlin">response</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;T&gt;,
+    <span class="z-variable z-parameter z-function z-kotlin">validState</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;FormValidationState&gt;,
+    <span class="z-variable z-parameter z-function z-kotlin">errors</span><span class="z-keyword z-operator z-declaration z-kotlin">:</span> MutableLiveData&lt;<span class="z-storage z-type z-buildin z-collection z-kotlin">List</span>&lt;<span class="z-storage z-type z-buildin z-kotlin">Int</span>&gt;&gt;
+) {
+    <span class="z-keyword z-other z-kotlin">val</span> <span class="z-entity z-name z-variable z-kotlin">newErrors</span> <span class="z-keyword z-operator z-assignment z-kotlin">=</span> errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>toMutableList() <span class="z-keyword z-operator z-elvis z-kotlin">?:</span> mutableListOf()
+    <span class="z-keyword z-control z-kotlin">when</span> (<span class="z-storage z-modifier z-kotlin">val</span> validationResponse <span class="z-keyword z-operator z-assignment z-kotlin">=</span> response<span class="z-keyword z-operator z-dot z-kotlin">.</span>value<span class="z-keyword z-operator z-safenav z-kotlin">?.</span>isValid()) {
+        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> validState<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Valid
+        <span class="z-comment z-line z-double-slash z-kotlin"><span class="z-punctuation z-definition z-comment z-kotlin">//</span> add the error that will be shown to the user to the list
+</span>        <span class="z-keyword z-operator z-kotlin">is</span> ValidationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid <span class="z-keyword z-operator z-declaration z-kotlin">-&gt;</span> {
+            newErrors<span class="z-keyword z-operator z-dot z-kotlin">.</span>add(validationResponse<span class="z-keyword z-operator z-dot z-kotlin">.</span>reason)
+            validState<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> FormValidationState<span class="z-keyword z-operator z-dot z-kotlin">.</span>Invalid
+        }
+    }
+    errors<span class="z-keyword z-operator z-dot z-kotlin">.</span>value <span class="z-keyword z-operator z-assignment z-kotlin">=</span> newErrors
+}
+</span></code></pre>
+<p>Bosh. Much better.</p>
+</section>
+  </article>
+</section>
+    <!-- prettier-ignore -->
+    <footer class="pt-4 pb-8 text-center text-sm text-stone-300 dark:text-stone-600">Made by <a href="https://github.com/samyouatt" class="underline font-semibold">me</a> in York</footer>
+  </body>
+</html>

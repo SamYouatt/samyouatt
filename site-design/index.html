@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://www.samyouatt.dev/styles/styles.css"
+    />
+    <link
+      rel="preload"
+      href="https://www.samyouatt.dev/fonts/MADEDillan.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-dark.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-light.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <title>Sam Youatt</title>
+  </head>
+
+  <body
+    class="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-800 dark:text-stone-200"
+  >
+    <nav class="mb-8 flex flex-row justify-center p-4">
+      <a href="/">
+        <span
+          class="self-center font-hero text-2xl text-stone-800 md:text-3xl dark:text-stone-200"
+        >
+          Sam Youatt
+        </span>
+      </a>
+    </nav>
+    <section class="flex-1">
+  
+  <article
+    class="prose prose-stone m-auto px-4 dark:prose-invert prose-a:text-cyan-500 prose-img:m-auto prose-hr:my-8 md:p-0 dark:prose-a:text-cyan-400"
+  >
+    <h1 class="mb-2">Site Design</h1>
+    <p class="m-0 text-stone-400 dark:text-stone-500">December 05, 2021</p>
+    <hr class="dark:border-stone-600" />
+    <section><p>I'd previously tried my hand with a <a href="https://www.udemy.com/course/the-web-developer-bootcamp/">Udemy</a> course on web development. It used React and Express to create a website for finding campsites. It was good, I finished it and thought it was about time I had a personal website.</p>
+<p>From my exposure to developers on social media it seemed like an essential step in my young developer life to have a website where I could show off my story and skills. This was about one year ago from this post and it just fizzled out.</p>
+<p>Using Express and React to serve what was essentially a glorified PDF gave me a lot of struggles, too much unnecessary fiddling to get a product I was happy with. It was also through social media I saw people mention static sites, often used for blogging or hosting project information. It sounded like just what I wanted, write any content in markdown and have your templates do the hard work for you. Plus you get the speed of a static site without the hassle of having to write all your content directly in HTML.</p>
+<h2 id="zola-senorita">Zola Señorita</h2>
+<p>Also pushed on me by the social media machine was Rust, and if you had no idea about the context of the language you would think it was the second coming of the Lord. In my eyes its just a more modern version of C or C++, which is by no means a bad thing and is unfairly simplifying the benefits Rust provides. But this isn't going to be a post about Rust, instead about something <em>made in Rust</em>.</p>
+<p><a href="https://www.getzola.org/">Zola</a> is a static site generator, you feed it markdown and it generates you your HTML. Exactly what I'm after.</p>
+<p>It seems to build on the back of other static site generators but with its own advantages. I have no context for if any of the changes it makes would impact be, but what is important is that it is <em>made in Rust</em>.</p>
+<h2 id="site-setup">Site Setup</h2>
+<p>I'm not going to detail the full process of setting up a site with Zola, the docs already provide that as well as hour long videos on YouTube. This also isn't supposed to be a tutorial, just a recollection of my experiences that is for my benefit more than any one else's.</p>
+<p>Set up was simple though, use <code>cargo</code> to install the software, call <code>zola init</code> and I was off.</p>
+<p>The basic structure that Zola enforces is as follows.</p>
+<ul>
+<li>Static folder, this is where stuff that normally goes to the public folder in a webpage will be grabbed from.</li>
+<li>An optional Sass folder, this is where the sass to be compiled to the css in the public folder will go.</li>
+<li>Content folder, which is where the markdown files that fill out the website will go.</li>
+<li>Templates, maybe the most important, is where you define your HTML templates that get inflated by markdown.</li>
+</ul>
+<p>There's going to be three main areas to my site:</p>
+<ol>
+<li>Blog - guess what goes here...</li>
+<li>Me - information about myself, like a more personal CV but with a link to a standard CV.</li>
+<li>Projects - a short list of my main projects at the moment and some of the main things I have achieved and how I would like to improve form there in the future.</li>
+</ol>
+<p>To achieve this I just create three folders in the content folder, matching the names above. Each of these will then have an <code>_index.md</code> file which serves as the index and base point of that content route. Zola will automatically handle the routing according to the folder names, to <code>/blog</code> is automatically filled with the stuff in the blog folder.</p>
+<h2 id="design">Design</h2>
+<p>There are a number of Zola themes available, as well as the wide range of CSS libraries like Bootstrap. But I want that bespoke feeling for my website, after all I am supposed to be showing off my <em>supreme</em> developer skills, so I am going to handle all the theming and styling myself.</p>
+<p>I am going to be using this as an opportunity to use Sass for the first time. There's not much I have to say about my whole experience with SASS having written this website other than that I don't understand why we don't just scrap CSS all together and use SASS from now on.</p>
+<p>It offers so many of the powers you have in <em>actual</em> programming languages which makes more complex behaviours for styling much easier to implement. Seriously, how are there still not variables in CSS? No going back to CSS for me.</p>
+<p>For the website I have a vision. A vision of website devoid of adverts, devoid of distraction, with just the essential content as the star of the show.</p>
+<p>Pushing my pretentious inner Steve Jobs-esque designer aside I do want to keep it simple. Part of the reason for this is that it will be much less work, but also because I do want the focus to be on the actual content of the website.</p>
+<p>Lots of developers have genius webpages that make use of a range of different trinkets and toys, 3D animations, text based adventures, full Operating system imitations. Given enough time I'm sure I could achieve such heights but I want to get a website spun up quickly, just in time to impress any recruiters currently reading this 👋.</p>
+<h3 id="colours">Colours</h3>
+<p>General advice for choosing a colour palette is to pick around 3-4 colour, one should be your main brand colour, the others acting as interest and contrast to the main colour. However I don't have a brand colour, I am a person so I have a bit more flexibility. So I'm going to use a spectrum.</p>
+<p>I'm also not really a colour expert, in my head I can visualise the perfect site with a gorgeous palette that is striking but sophisticated. Give me half an hour and a colour picker though and I will probably only have ended up with a few shades of brown and a nasty green. As such the colours are likely to change so here's the crazy idea...</p>
+<p>Monotone</p>
+<p>Not complete monotone, that would be boring. If monotone were so interesting why did we invent colours? Instead it will mostly be black text on white-ish background with a hit of colour, or colours, just as something interesting.</p>
+<p>After a lot of thinking and tweaking I have settled on the super simple and easy to implement idea of a spectrum of colours in the form of a stripe. After a while implementing it I realised that <a href="https://www.samyouatt.dev/site-design/www.polaroid.com">Polaroid</a> had sort of already made that their thing but hey art is just copying as much as you can get away with anyway.</p>
+<p>The colours in the stripe are very subject to change. Cheers SASS for letting me define them as variables.</p>
+<h3 id="fonts">Fonts</h3>
+<p>If the text is going to be the main content of the website then it best look nice. Once again I am not a typography expert, usually just a Arial or Helvetica man. But I need to push myself.</p>
+<p>Often times the best designs make use of multiple type faces so I went on the search for some that could work well in different places. I channelled my inner Nick Fury to create a team that could defend the world from any manner of threats, the looming threat of a website formed of Times New Roman and Comic Sans.</p>
+<p>The fonts I ended up using and their uses are as follows:</p>
+<ul>
+<li>Poppins: headings.</li>
+<li>Futura Now Heading: logo typography.</li>
+<li>Rubik: body text.</li>
+<li>Source Code Pro: monospace.</li>
+</ul>
+<p>Again these may have changed by the time this is read. I can only hope that my elite team has not crumbled though and you're trying to translate this from Wingdings.</p>
+<p>One of the main challenges of modern web development is responsive design. Not everyone is reading these posts on my monitor; with my staggering reach it would be infeasible to fit that many people in my flat. People will be using monitors of all shapes and resolutions, tablets, phones, maybe even TVs.</p>
+<p>The general trend has been from using fixed units like <code>px</code> to responsive units like <code>vh</code>, <code>rem</code>, etc. Font scaling is also very important. There are a lot of methods for defining font sizes, you could specify font sizes for each class to get a lot of control, or what I have done, define a font size hierarchy initially which will scale well and be used generically across all content.</p>
+<p>This hierarchy will make use of the <code>rem</code> unit, the root element unit, which looks at the <code>html</code> element for the basis font size and then multiplies the value. So for my <code>html</code> root size I chose <code>1.25vh</code>. This means the root font size will scale as the screen size increases in height. This value took a little bit of tweaking but it works well for the size of text I want.</p>
+<p>Next is the hierarchy for basis elements. This means defining the sizes for <code>h 1-6</code>, <code>p</code>, <code>a</code>, etc. The finished product looks as follows:</p>
+<pre data-lang="SASS" class="language-SASS z-code"><code class="language-SASS" data-lang="SASS"><span class="z-source z-sass"><span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">p</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>25<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">20<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">20<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">line-height</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>6</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">h1</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-weight</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-css">700</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">5<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">50<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">25<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">h2</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-weight</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-css">700</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">3<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">50<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">15<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">h3</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">2<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">40<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">15<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">a</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>element-foreground</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">text-decoration-color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>element-background</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-weight</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-css">500</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css">    <span class="z-keyword z-operator z-ampersand z-sass">&amp;</span><span class="z-meta z-selector z-css"><span class="z-entity z-other z-pseudo-class z-css"><span class="z-punctuation z-definition z-entity z-css">:</span>hover</span></span>
+</span>        <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">text-decoration-color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>element-foreground</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">ul</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>25<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">line-height</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>6</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">ol</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>25<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">line-height</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>6</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">li</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>25<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>medium</span> <span class="z-constant z-numeric z-integer z-decimal z-css">0</span> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>medium</span> <span class="z-support z-constant z-property-value z-css">none</span></span><span class="z-meta z-property-value z-css">
+</span></span></code></pre>
+<p>Also defined will be default additional properties that should be applied across all instances of these elements, such as colour, margins, and line heights. With this set up I can simply use the appropriate element that would achieve the appearance I want. It's very simple to set up, is responsive, and is super easy to work with.</p>
+<h3 id="stripey-background">Stripey Background</h3>
+<p>The main visual styling will be a striped motif using the colours from the palette. This could be achieved by creating a background image in an image editing program and then setting that as the background image but I want a bit more control. It's also likely that I'll make tweaks and changes along the way so having something that I can control quickly if the colour palette changes or I decide on a different style will be helpful.</p>
+<p>By adding in variables for the start gap and the width of the line, and doing some simple maths to define where colours should start and end, I can now easily control where I want the lines and how they should look. The embed below can be edited to see the effect changing these values has.</p>
+<div class="codepen-container">
+  <p
+    class="codepen"
+    data-height="300"
+    data-theme-id="dark"
+    data-default-tab="css,result"
+    data-slug-hash="OJjKEGa"
+    data-editable="true"
+    data-user="sam-youatt"
+    style="
+      height: 300px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      margin: 1em 0;
+      padding: 1em;
+    "
+  >
+    <span
+      >See the Pen
+      <a href="https://codepen.io/sam-youatt/pen/OJjKEGa"> Untitled</a>
+      by Sam Youatt (<a href="https://codepen.io/sam-youatt">@sam-youatt</a>) on
+      <a href="https://codepen.io">CodePen</a>.</span
+    >
+  </p>
+  <script
+    async
+    src="https://cpwebassets.codepen.io/assets/embed/ei.js"
+  ></script>
+</div>
+<p>This stripe will be shown on the left hand side of the screen on larger displays, but will rotate round to the top of the screen on narrower displays where horizontal space is at a premium.</p>
+<h3 id="animating-underlines">Animating Underlines</h3>
+<p>Small animations in key areas can bring a lot of polish to a site, one of these I always enjoy is when hovering on elements are animated. Since my home screen is very minimal I need some way to let the user know that the headings actually take you somewhere. The de facto design signal for this on the web is an underline so that's what will get animated.</p>
+<p>The animation should be kept simple and incorporate the main colours of the site. So why not have the underline utilise the striped motif as well.</p>
+<p>This effect can be achieved in pure CSS, by taking advantage of the <code>after</code> pseudoclass.</p>
+<p><code>after</code> creates an extra element immediately after the specified class, which can then have all the normal CSS styling applied. To achieve the stripey underline this pseudoclass will have its background set to stripes. By controlling the height of this class we can control how thick the underline is, and by animating its width we can achieve the effect of the underline sliding in and out. Let's have a look.</p>
+<div class="codepen-container">
+  <p
+    class="codepen"
+    data-height="300"
+    data-theme-id="dark"
+    data-default-tab="css,result"
+    data-slug-hash="XWerqxx"
+    data-editable="true"
+    data-user="sam-youatt"
+    style="
+      height: 300px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      margin: 1em 0;
+      padding: 1em;
+    "
+  >
+    <span
+      >See the Pen
+      <a href="https://codepen.io/sam-youatt/pen/XWerqxx"> Untitled</a>
+      by Sam Youatt (<a href="https://codepen.io/sam-youatt">@sam-youatt</a>) on
+      <a href="https://codepen.io">CodePen</a>.</span
+    >
+  </p>
+  <script
+    async
+    src="https://cpwebassets.codepen.io/assets/embed/ei.js"
+  ></script>
+</div>
+<h3 id="syntax-highlighting">Syntax Highlighting</h3>
+<p>By default the syntax highlighting offered by Zola is nothing special. There is a snippet offered on the <a href="https://www.getzola.org/documentation/content/syntax-highlighting/">documentation page</a> which adds padding and lets the text wrap round so as not to break our poor little phones.</p>
+<p>Here is my main area of struggle with Zola, the documentation for this is just not very helpful. I got there in the end but with a little more explantation it could be much better.</p>
+<p>Firstly, Zola allows some predefined code themes. You want to know what they are? Tough 🤷</p>
+<p>There is no list I can find, so I could sit there and try every combination of character on my keyboard from lengths of 3 to 10 and I might have a reasonably extensive list. Don't think I should have to do that though really. <a href="https://github.com/getzola/zola/issues/1679">A list would be nice Zola</a>.</p>
+<p>In the end though I ended up making my own theme, fingers crossed it didn't already exist just with a weird name, based on the <a href="https://github.com/atom/one-light-syntax">One-Light</a> theme. I know, I know, but your eyes will surely recover. In the future I would like to implement a dark mode of the website and this will use a dark theme, but I think that light codeblocks will fit in with the light design better for the time being.</p>
+<p>Creating my own theme was also a little bit of a pain. There isn't a list of the classes that Zola adds to your code to help you style it so I had to inspect element an already written code block to try and piece them together. If you are finding this and want a list I can save you a bit of time with what I have. It might not be all of them. The rest could be hiding, they could be any of us...</p>
+<pre data-lang="SASS" class="language-SASS z-code"><code class="language-SASS" data-lang="SASS"><span class="z-source z-sass"><span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-keyword</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>9f35a2</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-comment</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>a0a1a7</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-style</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-support z-constant z-property-value z-css">italic</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-assignment</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>9f35a2</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-type</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>e06c75</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-modifier</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>9f35a2</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-name</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>5184f3</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-inherited-class</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>e06c75</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-declaration</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>e06c75</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-parameter</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>e06c75</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-constant</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>d19a66</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-assignment</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>0184bc</span></span><span class="z-meta z-property-value z-css">
+</span>
+<span class="z-meta z-selector z-css"><span class="z-entity z-other z-attribute-name z-class z-css"><span class="z-punctuation z-definition z-entity z-css">.</span></span><span class="z-entity z-other z-attribute-name z-class z-css">z-string</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>5aa659</span></span><span class="z-meta z-property-value z-css">
+</span>
+</span></code></pre>
+<p>Another slight annoyance was trying to work out how to style the code block element, as in to give it a background, some padding, shadow etc.</p>
+<p>Let's play a game. If you were going to create a semantic HTML element that defines a code block what would you call it?</p>
+<p>Wrong it's called <code>pre</code>. Bet you're kicking yourself right now.</p>
+<p>There is a semantic element for <code>code</code>, which is for any code both inline and blockified.</p>
+<p>This poses an issue though if you want to style inline code differently since the code in the codeblock is also wrapped in a <code>code</code> semantic element. Instead you need to act only on <code>code</code> nested in <code>p</code> to style inline blocks like this:</p>
+<pre data-lang="SASS" class="language-SASS z-code"><code class="language-SASS" data-lang="SASS"><span class="z-source z-sass"><span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">p</span> </span><span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">code</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">background</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>element-background</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-family</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-string z-quoted z-single z-css"><span class="z-punctuation z-definition z-string z-begin z-css">&#39;</span>Source Code Pro<span class="z-punctuation z-definition z-string z-end z-css">&#39;</span></span><span class="z-punctuation z-separator z-sequence z-css">,</span> <span class="z-support z-constant z-font-name z-css">monospace</span></span>
+    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>element-foreground</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">padding</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>xx-small</span> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>x-small</span> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>xx-small</span> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>x-small</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">border-radius</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>border-radius</span></span><span class="z-meta z-property-value z-css">
+</span></span></code></pre>
+<p>To style general code blocks is the following:</p>
+<pre data-lang="SASS" class="language-SASS z-code"><code class="language-SASS" data-lang="SASS"><span class="z-source z-sass"><span class="z-meta z-selector z-css"><span class="z-entity z-name z-tag z-css">pre</span>
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">padding</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-integer z-decimal z-css">1<span class="z-keyword z-other z-unit z-css">rem</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">line-height</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>6</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-size</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-numeric z-float z-decimal z-css">1<span class="z-punctuation z-separator z-decimal z-css">.</span>25<span class="z-keyword z-other z-unit z-css">vh</span></span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">overflow</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-support z-constant z-property-value z-css">auto</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">border-radius</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-variable z-other z-sass"><span class="z-punctuation z-definition z-variable z-sass">$</span>border-radius</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">font-family</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-string z-quoted z-single z-css"><span class="z-punctuation z-definition z-string z-begin z-css">&#39;</span>Source Code Pro<span class="z-punctuation z-definition z-string z-end z-css">&#39;</span></span><span class="z-punctuation z-separator z-sequence z-css">,</span> <span class="z-support z-constant z-font-name z-css">monospace</span></span>
+    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">background-color</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-constant z-other z-color z-rgb-value z-css"><span class="z-punctuation z-definition z-constant z-css">#</span>fff</span></span><span class="z-meta z-property-value z-css">
+</span>    <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">box-shadow</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> <span class="z-meta z-function-call z-css"><span class="z-support z-function z-color z-css">rgba</span><span class="z-meta z-group z-css"><span class="z-punctuation z-definition z-group z-begin z-css">(</span><span class="z-constant z-numeric z-css">0</span><span class="z-punctuation z-separator z-sequence z-css">,</span> <span class="z-constant z-numeric z-css">0</span><span class="z-punctuation z-separator z-sequence z-css">,</span> <span class="z-constant z-numeric z-css">0</span><span class="z-punctuation z-separator z-sequence z-css">,</span> <span class="z-constant z-numeric z-float z-decimal z-css">0<span class="z-punctuation z-separator z-decimal z-css">.</span>1</span></span><span class="z-meta z-group z-css"><span class="z-punctuation z-definition z-group z-end z-css">)</span></span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">5<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">30<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-meta z-property-value z-css">
+</span></span></code></pre>
+<h2 id="extra-features">Extra Features</h2>
+<h3 id="codepen">Codepen</h3>
+<p>Those fancy codepen embeds you saw are provided by Codepen, they let you embed them through either an i-frame or raw HTML. I chose HTML because it gives me a little more control but copying and pasting the whole embed every time leaves the markdown looking a little messy. And remember, if you find yourself writing the same thing over and over again, don't. You've done it once already just use that.</p>
+<p>Zola provides functionality to create custom shortcodes. These are commands that you call in the markdown that will summon the specified HTML spirit into the compiled HTML with whatever instructions you tell them. For the codepen the shortcode template is as follows:</p>
+<pre data-lang="HTML" class="language-HTML z-code"><code class="language-HTML" data-lang="HTML"><span class="z-text z-html z-basic"><span class="z-meta z-tag z-block z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-block z-any z-html">div</span> <span class="z-meta z-attribute-with-value z-class z-html"><span class="z-entity z-other z-attribute-name z-class z-html">class</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span></span><span class="z-string z-quoted z-double z-html"><span class="z-meta z-class-name z-html">codepen-container</span><span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+  <span class="z-meta z-tag z-block z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-block z-any z-html">p</span>
+<mark>    <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-slug-hash</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>{{slug}}<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span>
+</mark>    <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-editable</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>true<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span>
+    <span class="z-meta z-attribute-with-value z-class z-html"><span class="z-entity z-other z-attribute-name z-class z-html">class</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span></span><span class="z-string z-quoted z-double z-html"><span class="z-meta z-class-name z-html">codepen</span><span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-height</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>300<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-theme-id</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>dark<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-default-tab</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>css,result<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">data-user</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>sam-youatt<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span> 
+    <span class="z-meta z-attribute-with-value z-style z-html"><span class="z-entity z-other z-attribute-name z-style z-html">style</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span></span><span class="z-source z-css">
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">height</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-constant z-numeric z-integer z-decimal z-css">300<span class="z-keyword z-other z-unit z-css">px</span></span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">box-sizing</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-support z-constant z-property-value z-css">border-box</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">display</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-support z-constant z-property-value z-css">flex</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">align-items</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-support z-constant z-property-value z-css">center</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">justify-content</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-support z-constant z-property-value z-css">center</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">border</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-constant z-numeric z-integer z-decimal z-css">2<span class="z-keyword z-other z-unit z-css">px</span></span> <span class="z-support z-constant z-property-value z-css">solid</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">margin</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-constant z-numeric z-integer z-decimal z-css">1<span class="z-keyword z-other z-unit z-css">em</span></span> <span class="z-constant z-numeric z-integer z-decimal z-css">0</span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+      <span class="z-meta z-property-name z-css"><span class="z-support z-type z-property-name z-css">padding</span></span><span class="z-punctuation z-separator z-key-value z-css">:</span><span class="z-meta z-property-value z-css"> </span><span class="z-meta z-property-value z-css"><span class="z-constant z-numeric z-integer z-decimal z-css">1<span class="z-keyword z-other z-unit z-css">em</span></span></span><span class="z-punctuation z-terminator z-rule z-css">;</span>
+    </span><span class="z-string z-quoted z-double"><span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span>
+  </span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+    <span class="z-meta z-tag z-inline z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-inline z-any z-html">span</span>
+      <span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>See the Pen
+      <span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">href</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>https://codepen.io/sam-youatt/pen/{{slug}}<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span> Untitled<span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+      by Sam Youatt (<span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">href</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>https://codepen.io/sam-youatt<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>@sam-youatt<span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>) on
+      <span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span> <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">href</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>https://codepen.io<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>CodePen<span class="z-meta z-tag z-inline z-a z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-inline z-a z-html">a</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>.<span class="z-meta z-tag z-inline z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-inline z-any z-html">span</span>
+    <span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+  <span class="z-meta z-tag z-block z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-block z-any z-html">p</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+  <span class="z-meta z-tag z-script z-begin z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;</span><span class="z-entity z-name z-tag z-script z-html">script</span></span><span class="z-meta z-tag z-script z-begin z-html">
+    <span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">async</span>
+    </span><span class="z-meta z-attribute-with-value z-html"><span class="z-entity z-other z-attribute-name z-html">src</span><span class="z-punctuation z-separator z-key-value z-html">=</span><span class="z-string z-quoted z-double z-html"><span class="z-punctuation z-definition z-string z-begin z-html">&quot;</span>https://cpwebassets.codepen.io/assets/embed/ei.js<span class="z-punctuation z-definition z-string z-end z-html">&quot;</span></span></span>
+  <span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span><span class="z-meta z-tag z-script z-end z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-script z-html">script</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+<span class="z-meta z-tag z-block z-any z-html"><span class="z-punctuation z-definition z-tag z-begin z-html">&lt;/</span><span class="z-entity z-name z-tag z-block z-any z-html">div</span><span class="z-punctuation z-definition z-tag z-end z-html">&gt;</span></span>
+</span></code></pre>
+<p>The important part is imprisoned by the double braces: <code>slug</code>. Everything else is repeated across all the pens but Codepen need some way to know which file to display, by being passed a slug like some sort of trade deal performed by children in a freshly raining garden. The double braces let Zola know that these are one of those instructions you're going to give it. Calling is then the much shorter summoning ritual: <code>{{*codepen(slug=&quot;XxXCornDog&quot;)*}}</code>.</p>
+</section>
+  </article>
+</section>
+    <!-- prettier-ignore -->
+    <footer class="pt-4 pb-8 text-center text-sm text-stone-300 dark:text-stone-600">Made by <a href="https://github.com/samyouatt" class="underline font-semibold">me</a> in York</footer>
+  </body>
+</html>

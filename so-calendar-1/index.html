@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://www.samyouatt.dev/styles/styles.css"
+    />
+    <link
+      rel="preload"
+      href="https://www.samyouatt.dev/fonts/MADEDillan.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-dark.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/one-half-light.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <title>Sam Youatt</title>
+  </head>
+
+  <body
+    class="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-800 dark:text-stone-200"
+  >
+    <nav class="mb-8 flex flex-row justify-center p-4">
+      <a href="/">
+        <span
+          class="self-center font-hero text-2xl text-stone-800 md:text-3xl dark:text-stone-200"
+        >
+          Sam Youatt
+        </span>
+      </a>
+    </nav>
+    <section class="flex-1">
+  
+  <article
+    class="prose prose-stone m-auto px-4 dark:prose-invert prose-a:text-cyan-500 prose-img:m-auto prose-hr:my-8 md:p-0 dark:prose-a:text-cyan-400"
+  >
+    <h1 class="mb-2">Building SoCalendar - Part I</h1>
+    <p class="m-0 text-stone-400 dark:text-stone-500">June 23, 2024</p>
+    <hr class="dark:border-stone-600" />
+    <section><p>There's a new wave of TUI's emerging. Frequent Hacker News posts showcasing flashy new applications, boasting interactivity, power, but all from the terminal. <a href="https://github.com/yorukot/superfile">Superfile</a> and <a href="https://github.com/jesseduffield/lazygit">LazyGit</a> are two of the more recent examples that I've played around with.</p>
+<p>It's only relatively recently I've found myself spending more time on the terminal. A few years ago they scared me as a concept; non-user friendly and obtuse. It was probably NeoVim that started to make me feel more comfortable with them as a concept. Now I wish everything could run on the terminal. It might still be a phase, I could find myself swinging back somewhere into the middle where I appreciate both the speed and efficiency of the terminal for some tasks while embracing the visual and interactivity afforded by a GUI.</p>
+<p>However, right now I'm definitely in my TUI phase and I'm seeking a terminal version of most apps I use day to day. But there's one that I have yet to see pop up - the calendar.</p>
+<p>My favourite calendar app at the moment is <del>Cron</del> <a href="https://www.notion.so/product/calendar">Notion Calendar</a>. It's been my go to calendar app ever since I started using it. It's simple, quick, has good keyboard shortcuts and has some great features. Auto-blocking busy periods on other calendars when creating events, quick timezone comparisons for holiday preparation, and an easy way to view other people's availability to plan meetings.</p>
+<h2 id="technology">Technology</h2>
+<p>Rust is my language of choice at the moment. I find it super satisfying to write in and now I'm getting more and more familiar with the borrow checker, and the way it wants you to design your system, I'm really able to appreciate the expressiveness of the language. </p>
+<p>Go almost tempted me; it's still something that I'd like to pick up and try for a larger project. I'd particularly like to try and create another TUI, making use of the snazzy looking <a href="https://charm.sh/">Charm.sh</a> libraries, and compare the experience to Rust.</p>
+<p>To handle the creation of the TUI itself I'm gonna be relying on <a href="https://ratatui.rs/">Ratatui</a>, which looks to be a really powerful crate. There's always the bareback approach, handling all the ASCII escape codes and double buffering myself but I think I'll leave that for another day.</p>
+<p>Ratatui gives you the building blocks you will need to design some pretty robust interfaces, fundamental items like <code>Blocks</code> and <code>Layouts</code> for structuring your interface and more specific things like <code>Paragraph</code> and <code>List</code>, while also providing traits to allow you to expressively build up your own widgets.</p>
+<p>Outside of that those visual building blocks, and a few helper functions that interact with a terminal backend of your choice (the deFactor is CrossTerm), the behaviour of your application is up to you to design.</p>
+<h2 id="the-elm-architecture">The Elm Architecture</h2>
+<ul>
+<li>Overview of the architecture</li>
+<li>What I think about it at first glance, seems great for small projects but how does it scale when you have more state, more events etc</li>
+<li>Rust enum's are the perfect fit for messages, wrapping data inside events while still having strong pattern matching is always awesome</li>
+</ul>
+<p>Pretty early in the comprehensive Ratatui docs you'll encounter some ruminations around where state should be stored in the application, and how interactions should be handled. This is exacerbated when considering an async application (which I'll touch on later). </p>
+<p>Rust's strictness around ownership and lack of garbage collector means systems have to be a little more thoughtful than you would be working with the wild west of JavaScript web development. There's a number of approaches to take but one of the architectures mentioned in the docs caught my eye.</p>
+<p><a href="https://guide.elm-lang.org/architecture/">The Elm Architecture</a> (TEA), named for the Elm language of course, is recommended in the <a href="https://ratatui.rs/concepts/application-patterns/the-elm-architecture/">Ratatui docs</a> in a number of places. Elm's functional paradigm with strong typing map well to some of Rust's core concepts and this comes across in how well the architecture seems to fit this problem space.</p>
+<p>There are three main concepts in TEA:</p>
+<ol>
+<li><strong>Model</strong>: all of the application state is stored in the model, as opposed to spread out closer to components</li>
+<li><strong>Update</strong>: this is a function which takes a model and an event and maps to a new model</li>
+<li><strong>View</strong>: this is a function which takes in a model state and produces the UI from that state</li>
+</ol>
+<p>Let's take a look at what that looks like in SoCalendar.</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-struct z-rust"><span class="z-storage z-modifier z-rust">pub</span> <span class="z-storage z-type z-struct z-rust">struct</span> </span><span class="z-meta z-struct z-rust"><span class="z-entity z-name z-struct z-rust">Model</span> </span><span class="z-meta z-struct z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+    <span class="z-storage z-modifier z-rust">pub</span> <span class="z-variable z-other z-member z-rust">application</span><span class="z-punctuation z-separator z-type z-rust">:</span> Application,
+    <span class="z-storage z-modifier z-rust">pub</span> <span class="z-variable z-other z-member z-rust">current_state</span><span class="z-punctuation z-separator z-type z-rust">:</span> CurrentState,
+    <span class="z-storage z-modifier z-rust">pub</span> <span class="z-variable z-other z-member z-rust">message_channel</span><span class="z-punctuation z-separator z-type z-rust">:</span> MessageSender,
+    ...other bits of top level state...
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<h3 id="model">Model</h3>
+<p>Model here is a struct, it contains a few different fields. Along side keeping track of the current state of the model (essentially what page the app is currently on) it also has some of the more operational data; the application struct contains stuff like database pools that are required for basic app functionality and the message channel is a sender channel that will become important shortly.</p>
+<p>Any other state which would be required by multiple parts of the app would live here. An example would be the current in memory list of events that had been fetched, so that each page didn't have to refetch them if it didn't have to.</p>
+<p>Page specific state I have chosen to store inside the <code>CurrentState</code>, which is an enum eliciting all the various states (mostly pages but occasionally transitional states like awaiting a user to log in in their browser) which will contain their specific state.</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-storage z-modifier z-rust">pub</span> <span class="z-storage z-type z-enum z-rust">enum</span> <span class="z-entity z-name z-enum z-rust">CurrentState</span> <span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+    MonthView<span class="z-punctuation z-separator z-rust">,</span>
+    ManageConnections<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>ManageConnectionsState</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span>
+    <span class="z-comment z-line z-double-slash z-rust"><span class="z-punctuation z-definition z-comment z-rust">//</span> Waiting for user to log in via their browser - contains the cancellation token for that awaiting thread
+</span>    PendingLogin<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>CancellationToken</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span>
+    Done<span class="z-punctuation z-separator z-rust">,</span>
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<h3 id="update">Update</h3>
+<p>As explained above, the update function handles the majority of the work in TEA. Since Elm is purely functional, a true mirror of this architecture would take in a model and a message and produce a new model. While this is possible to do in Rust, I've chosen to mutate the model for its slight ergonomic benefits. This is something I'd like to revisit later though, immutable is almost always better than mutable.</p>
+<p>A message defines an action taken that should update the model. This is largely going to be a result of some user input, they have pressed the escape key to navigate backwards, or they have pressed q to quit the app. There are instances though that represent app-driven events. As an example, a slow fetch from Google would ideally be moved onto a background thread. Upon completion that thread would send a message with the payload of that fetch (or an error 🥲).</p>
+<p>My implementation looks as follows:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-storage z-modifier z-rust">pub</span> async <span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">update</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span><span class="z-variable z-parameter z-rust">model</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> Model, <span class="z-variable z-parameter z-rust">msg</span><span class="z-punctuation z-separator z-rust">:</span> Message</span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> <span class="z-meta z-function z-return-type z-rust"><span class="z-punctuation z-separator z-rust">-&gt;</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Result</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Option</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>Message<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span></span> </span><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+	<span class="z-keyword z-operator z-range z-rust">...</span>
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>Note that the <code>Ok</code> variant of the <code>Result</code> actually returns an additional optional message. This is handy in certain cases where an action should actually trigger another event. Consider a message that represents a desire to navigate backwards from one page to the previous. One option would be to mutate the model to be in the new state, but if that state required data fetching or processing it's better to instead return the message for moving to that state. Then the next time around the update function can do the handling.</p>
+<h3 id="view">View</h3>
+<p>The view is getting into the nitty gritty of rendering using Ratatui, which I want to explore more deeply in another piece. For now, its enough to know that it will take the model and render something.</p>
+<h2 id="sqlx-and-async-curse">Sqlx and Async Curse</h2>
+<p>Something that I'm still a little unsettled by is having to use async for this app. I'd originally set out to keep everything synchronous where possible, utilising standard Rust threads when I required parallel processing of requests. </p>
+<p>It's not that I dislike async in Rust, although it's not free from its quirks, I generally quite enjoy using it. I'll die on the hill that <code>await</code> as a postfix operator is always going to be better than a prefix. But it would certainly have kept everything a bit tidier to not need to dot asyncs and awaits around.</p>
+
+<img src="https:&#x2F;&#x2F;www.samyouatt.dev&#x2F;processed_images&#x2F;coloured-teletubbies.aae899d28dccafb9.png" />
+<p>So why did I end up using async? Once simple reason. <a href="https://github.com/launchbadge/sqlx">Sqlx</a>.</p>
+<p>Sqlx is my favourite crate for driving database interactions. In fact it might just be my favourite Rust crate at all.</p>
+<p>I love the way it does compile time checking. I like that it can manage migrations for me. I like it's ergonomics, how easy it is to deserialise your rows into structs and get errors from your LSP when you are missing a field. And there's certainly nothing wrong with <a href="https://docs.rs/rusqlite/latest/rusqlite/index.html">Rusqlite</a> and it's what I set out to use given its popularity and offering a synchronous interface. But it's just not Sqlx, and so async await it is.</p>
+<h3 id="sqlite">Sqlite</h3>
+<p>For my database I've chosen to go with SQLite. It's the perfect choice for a simple application like this. No need to spin up a Postgres server and a step above storing everything in files manually.</p>
+<p>It's my first time using SQLite and I was a little surprised at first by just how simple it is. Firstly to get up and running, but notably in it's primitives. I'm used to sticking UUID's everywhere as primary keys in Postgres - no such luxury in SQLite. You'll take an auto-incrementing number and you'll like it. (You can store the uuid as a string and then manually convert it but that sounds like more effort than it's worth).</p>
+<p>I set out with a simple set up function that would create the tables I expected without the need for migrations. I'm used to web dev where you need migrations because you have a long lived database with everyone's data; I'd fail to consider that you would need some way to update a user's database when a new version of the app came out as well.</p>
+<p>Oh well, migrations here I come. Sqlx makes migrations super easy. They live inside the <code>/migrations</code> folder in your project and a simple <code>sqlx migrate</code> command gets you up and running. All of that can also be configured in code, which is handy for tests.</p>
+<p>Interacting with the database is the same regardless of the database when using sqlx. You spin up a connection pool and then you query the database with those magical checked macros.</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-struct z-rust"><span class="z-storage z-modifier z-rust">pub</span> <span class="z-storage z-type z-struct z-rust">struct</span> </span><span class="z-meta z-struct z-rust"><span class="z-entity z-name z-struct z-rust">Calendar</span> </span><span class="z-meta z-struct z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+    <span class="z-storage z-modifier z-rust">pub</span> <span class="z-variable z-other z-member z-rust">calendar_id</span><span class="z-punctuation z-separator z-type z-rust">:</span> String,
+    <span class="z-storage z-modifier z-rust">pub</span> <span class="z-variable z-other z-member z-rust">account_id</span><span class="z-punctuation z-separator z-type z-rust">:</span> <span class="z-storage z-type z-rust">i64</span>,
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+
+<span class="z-storage z-modifier z-rust">pub</span> async <span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">retrieve_calendars</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span><span class="z-variable z-parameter z-rust">db</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span>SqlitePool</span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> <span class="z-meta z-function z-return-type z-rust"><span class="z-punctuation z-separator z-rust">-&gt;</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Result</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>Calendar<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span></span> </span><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+    <span class="z-storage z-type z-rust">let</span> calendars<span class="z-punctuation z-separator z-rust">:</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>Calendar<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span> <span class="z-keyword z-operator z-assignment z-rust">=</span>
+        <span class="z-meta z-path z-rust">sqlx<span class="z-punctuation z-accessor z-rust">::</span></span>query_as<span class="z-keyword z-operator z-logical z-rust">!</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>Calendar<span class="z-punctuation z-separator z-rust">,</span> <span class="z-string z-quoted z-double z-rust"><span class="z-punctuation z-definition z-string z-begin z-rust">&quot;</span>SELECT calendar_id, account_id FROM calendars<span class="z-punctuation z-definition z-string z-end z-rust">&quot;</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+            <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">fetch_all</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>db</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+            <span class="z-punctuation z-accessor z-dot z-rust">.</span>await<span class="z-keyword z-operator z-rust">?</span><span class="z-punctuation z-terminator z-rust">;</span>
+
+    <span class="z-support z-type z-rust">Ok</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>calendars</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>Being able to query straight into a struct is super cool. If at any point the data type of one of the calendar columns changes, or get's dropped, I'll be warned at compile time by the sqlx query macro. This is genius and the best showcase of compile time macros I've seen. You do pay the price of slightly slower compile times, which is already a pain point with Rust, but I consider the tradeoff more than worth it in this case.</p>
+<p>Since I last did any sizeable work with sqlx they've also added the offline query support. Run a command on the cli to generate cached information for compile time checks in scenarios that don't have a database. E.g. running tests or in CI actions. Seriously good stuff.</p>
+<h2 id="onwards">Onwards</h2>
+<p>With these general architectural decisions out the way everything is set up to start making some progress on the actual problems that will come up with the application itself and I'm excited to get implementing features.</p>
+</section>
+  </article>
+</section>
+    <!-- prettier-ignore -->
+    <footer class="pt-4 pb-8 text-center text-sm text-stone-300 dark:text-stone-600">Made by <a href="https://github.com/samyouatt" class="underline font-semibold">me</a> in York</footer>
+  </body>
+</html>
